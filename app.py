@@ -14,20 +14,43 @@ LOGO_PATH = os.path.join("assets", "spotify_icon.png")
 page_icon = LOGO_PATH if os.path.exists(LOGO_PATH) else "🎵"
 st.set_page_config(page_title="Spotify Hit Predictor", layout="wide", page_icon=page_icon)
 
-st.markdown(
-    """
-    <style>
-      .block-container {padding-top: 1.2rem; padding-bottom: 2.5rem;}
-      h1 {margin-bottom: 0.2rem;}
-      h2 {margin-top: 1.2rem;}
-      .stButton>button {border-radius: 10px; padding: 0.55rem 1.1rem;}
-      .stExpander {border-radius: 14px;}
-      [data-baseweb="slider"] {padding-top: 0.35rem;}
-      .metric-hint {color: rgba(255,255,255,0.75); font-size: 0.95rem; margin-top: -0.25rem;}
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+if "theme_mode" not in st.session_state:
+    st.session_state["theme_mode"] = "dark"
+
+base_css = """
+<style>
+  .block-container {padding-top: 1.2rem; padding-bottom: 2.5rem;}
+  h1 {margin-bottom: 0.2rem;}
+  h2 {margin-top: 1.2rem;}
+  .stButton>button {border-radius: 10px; padding: 0.55rem 1.1rem;}
+  .stExpander {border-radius: 14px;}
+  [data-baseweb="slider"] {padding-top: 0.35rem;}
+  .metric-hint {color: rgba(255,255,255,0.75); font-size: 0.95rem; margin-top: -0.25rem;}
+  @media (max-width: 768px){
+    .block-container {padding-top: 2.2rem;}
+    [data-testid="stImage"] img {margin-top: 8px;}
+  }
+</style>
+"""
+
+dark_css = """
+<style>
+  :root { --app-bg: #0e1117; --app-text: #e8e8e8; --hint: rgba(255,255,255,0.75); }
+  [data-testid="stAppViewContainer"] { background: var(--app-bg); color: var(--app-text); }
+  .metric-hint { color: var(--hint); }
+</style>
+"""
+
+light_css = """
+<style>
+  :root { --app-bg: #ffffff; --app-text: #111111; --hint: rgba(0,0,0,0.65); }
+  [data-testid="stAppViewContainer"] { background: var(--app-bg); color: var(--app-text); }
+  .metric-hint { color: var(--hint); }
+</style>
+"""
+
+st.markdown(base_css, unsafe_allow_html=True)
+st.markdown(dark_css if st.session_state["theme_mode"] == "dark" else light_css, unsafe_allow_html=True)
 
 @st.cache_resource
 def load_artifacts():
@@ -51,21 +74,35 @@ if "reset_nonce" not in st.session_state:
     st.session_state["reset_nonce"] = 0
 
 def do_reset():
-    keep = {"reset_nonce"}
+    keep = {"reset_nonce", "theme_mode"}
     for k in list(st.session_state.keys()):
         if k not in keep:
             del st.session_state[k]
     st.session_state["reset_nonce"] += 1
 
-h1, h2 = st.columns([0.08, 0.92], vertical_alignment="center")
-with h1:
-    if os.path.exists(LOGO_PATH):
-        st.image(LOGO_PATH, width=72)
-    else:
-        st.write("🎵")
-with h2:
-    st.title("Spotify Hit Predictor")
-    st.caption("Choose a genre, set the audio/artist features, then click Predict. Use the ? icons for short, practical explanations.")
+top_l, top_r = st.columns([0.72, 0.28], vertical_alignment="center")
+with top_r:
+    is_dark = st.toggle(
+        "🌙 Dark mode",
+        value=(st.session_state["theme_mode"] == "dark"),
+        key=f"theme_toggle_{st.session_state['reset_nonce']}",
+        help="Switch between dark and light appearance."
+    )
+    new_mode = "dark" if is_dark else "light"
+    if new_mode != st.session_state["theme_mode"]:
+        st.session_state["theme_mode"] = new_mode
+        st.rerun()
+
+with top_l:
+    h1, h2 = st.columns([0.10, 0.90], vertical_alignment="center")
+    with h1:
+        if os.path.exists(LOGO_PATH):
+            st.image(LOGO_PATH, width=72)
+        else:
+            st.write("🎵")
+    with h2:
+        st.title("Spotify Hit Predictor")
+        st.caption("Choose a genre, set the audio/artist features, then click Predict. Use the ? icons for short, practical explanations.")
 
 st.button("🔄 Reset", on_click=do_reset, key="reset_btn")
 
