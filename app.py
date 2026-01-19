@@ -38,10 +38,11 @@ DARK_CSS = """
  --muted:rgba(255,255,255,0.86);
  --control-bg:#141a24;
  --control-border:rgba(255,255,255,0.30);
- --menu-bg:#141a24;
- --menu-hover:rgba(255,255,255,0.14);
+ --menu-bg:#ffffff;
+ --menu-hover:rgba(0,0,0,0.06);
  --btn-bg:#1b2330;
  --btn-hover:#263244;
+ --exp-bg:#141a24;
 }
 [data-testid="stAppViewContainer"]{background:var(--bg)!important;}
 h1,h2,h3,h4,h5,h6,p,span,label,small{color:#ffffff!important;opacity:1!important;}
@@ -51,41 +52,40 @@ div[data-baseweb="select"]>div{
   background:var(--control-bg)!important;
   border-color:var(--control-border)!important;
 }
-
 div[data-baseweb="select"] *{
   color:#ffffff!important;
   fill:#ffffff!important;
   opacity:1!important;
   -webkit-text-fill-color:#ffffff!important;
 }
-
-div[data-baseweb="select"] input{
-  opacity:1!important;
-  color:#ffffff!important;
-  -webkit-text-fill-color:#ffffff!important;
-}
-
-div[data-baseweb="select"] input::placeholder{
-  color:rgba(255,255,255,0.85)!important;
-  -webkit-text-fill-color:rgba(255,255,255,0.85)!important;
-  opacity:1!important;
-}
+div[data-baseweb="select"] input{opacity:1!important;}
 
 div[role="listbox"], ul[role="listbox"], [data-baseweb="popover"], [data-baseweb="menu"]{
-  background:var(--menu-bg)!important;
-  border:1px solid var(--control-border)!important;
+  background:#ffffff!important;
+  border:1px solid rgba(0,0,0,0.12)!important;
 }
-
 div[role="option"], li[role="option"],
 div[role="option"] *, li[role="option"] *,
 [data-baseweb="popover"] *, [data-baseweb="menu"] *{
-  color:#ffffff!important;
+  color:#000000!important;
   opacity:1!important;
+  background:#ffffff!important;
 }
-
 div[role="option"][aria-selected="true"], li[role="option"][aria-selected="true"],
 div[role="option"]:hover, li[role="option"]:hover{
   background:var(--menu-hover)!important;
+}
+
+[data-baseweb="accordion"] > div{
+  background:var(--exp-bg)!important;
+  border-radius: 14px!important;
+  border: 1px solid rgba(255,255,255,0.18)!important;
+}
+[data-baseweb="accordion"] button,
+[data-baseweb="accordion"] span{
+  color:#ffffff!important;
+  opacity:1!important;
+  font-weight:650!important;
 }
 
 .stButton>button{
@@ -99,6 +99,12 @@ div[role="option"]:hover, li[role="option"]:hover{
 
 [data-baseweb="toggle"] span{color:#ffffff!important; font-weight:750!important; opacity:1!important;}
 [data-baseweb="toggle"] [role="switch"][aria-checked="true"]{background:#1db954!important;}
+
+[data-testid="stTooltipContent"]{
+  background:#111827!important;
+  color:#ffffff!important;
+  border:1px solid rgba(255,255,255,0.20)!important;
+}
 </style>
 """
 
@@ -114,6 +120,7 @@ LIGHT_CSS = """
  --menu-hover:rgba(0,0,0,0.06);
  --btn-bg:#f3f4f6;
  --btn-hover:#e5e7eb;
+ --exp-bg:#ffffff;
 }
 [data-testid="stAppViewContainer"]{background:var(--bg)!important;}
 h1,h2,h3,h4,h5,h6,p,span,label,small{color:#000000!important;opacity:1!important;}
@@ -123,41 +130,40 @@ div[data-baseweb="select"]>div{
   background:var(--control-bg)!important;
   border-color:var(--control-border)!important;
 }
-
 div[data-baseweb="select"] *{
   color:#000000!important;
   fill:#000000!important;
   opacity:1!important;
   -webkit-text-fill-color:#000000!important;
 }
-
-div[data-baseweb="select"] input{
-  opacity:1!important;
-  color:#000000!important;
-  -webkit-text-fill-color:#000000!important;
-}
-
-div[data-baseweb="select"] input::placeholder{
-  color:rgba(0,0,0,0.70)!important;
-  -webkit-text-fill-color:rgba(0,0,0,0.70)!important;
-  opacity:1!important;
-}
+div[data-baseweb="select"] input{opacity:1!important;}
 
 div[role="listbox"], ul[role="listbox"], [data-baseweb="popover"], [data-baseweb="menu"]{
-  background:var(--menu-bg)!important;
+  background:#ffffff!important;
   border:1px solid var(--control-border)!important;
 }
-
 div[role="option"], li[role="option"],
 div[role="option"] *, li[role="option"] *,
 [data-baseweb="popover"] *, [data-baseweb="menu"] *{
   color:#000000!important;
   opacity:1!important;
+  background:#ffffff!important;
 }
-
 div[role="option"][aria-selected="true"], li[role="option"][aria-selected="true"],
 div[role="option"]:hover, li[role="option"]:hover{
   background:var(--menu-hover)!important;
+}
+
+[data-baseweb="accordion"] > div{
+  background:var(--exp-bg)!important;
+  border-radius: 14px!important;
+  border: 1px solid rgba(0,0,0,0.14)!important;
+}
+[data-baseweb="accordion"] button,
+[data-baseweb="accordion"] span{
+  color:#000000!important;
+  opacity:1!important;
+  font-weight:650!important;
 }
 
 .stButton>button{
@@ -171,6 +177,12 @@ div[role="option"]:hover, li[role="option"]:hover{
 
 [data-baseweb="toggle"] span{color:#000000!important; font-weight:800!important; opacity:1!important;}
 [data-baseweb="toggle"] [role="switch"][aria-checked="true"]{background:#1db954!important;}
+
+[data-testid="stTooltipContent"]{
+  background:#ffffff!important;
+  color:#000000!important;
+  border:1px solid rgba(0,0,0,0.18)!important;
+}
 </style>
 """
 
@@ -216,7 +228,7 @@ with top_r:
         "🌙 Dark mode",
         value=(st.session_state["theme_mode"] == "dark"),
         key=f"theme_toggle_{st.session_state['reset_nonce']}",
-        help="Switch between dark and light appearance."
+        help="Switch the interface between Dark and Light. Dark is easier on the eyes at night; Light is better in bright environments."
     )
     new_mode = "dark" if is_dark else "light"
     if new_mode != st.session_state["theme_mode"]:
@@ -230,9 +242,9 @@ with top_l:
             st.image(LOGO_PATH, width=72)
     with c2:
         st.title("Spotify Hit Predictor")
-        st.caption("Choose a genre, set the audio and artist features, then click Predict. Use the ? icons for explanations.")
+        st.caption("Select a genre, adjust track/artist features, then press Predict. Hover over the ? icons to understand each input.")
 
-st.button("🔄 Reset", on_click=do_reset, key="reset_btn")
+st.button("🔄 Reset", on_click=do_reset, key="reset_btn", help="Clears all inputs and returns everything to the default values.")
 
 super_map = {
     "rock": "Rock/Metal", "alt-rock": "Rock/Metal", "alternative": "Rock/Metal",
@@ -274,7 +286,7 @@ with g1:
         genre_groups,
         index=genre_groups.index(default_group),
         key=f"genre_group_{st.session_state['reset_nonce']}",
-        help="A broad category to keep the list simple. Pick the overall style first."
+        help="Step 1/2: Pick a broad style. This only filters the list so you can find the right sound faster (it does not block any option)."
     )
 
 with g2:
@@ -285,7 +297,7 @@ with g2:
         sub_list,
         index=0,
         key=f"alt_genre_{st.session_state['reset_nonce']}",
-        help="A more specific style inside the selected category."
+        help="Step 2/2: Pick the specific sub-style you want. This selection is used to assign a frequency value for that genre."
     )
 
 track_genre_freq = float(GENRE_FREQ_MAP.get(chosen_genre, 0.0))
@@ -297,83 +309,83 @@ with c1:
     duration_sec = st.slider(
         "⏱️ duration (sec)", 30, 900, 180,
         key=f"duration_{st.session_state['reset_nonce']}",
-        help="Total track length in seconds."
+        help="Total track length in seconds. A typical pop song is ~180–240 seconds, but you can set any realistic value."
     )
     st.markdown(f"<div class='metric-hint'>= {duration_sec//60} min {duration_sec%60:02d} sec</div>", unsafe_allow_html=True)
 
     artist_followers_k = st.slider(
         "👥 artist_followers (K)", 0, 150_000, 100, step=100,
         key=f"followers_{st.session_state['reset_nonce']}",
-        help="Artist follower count in thousands (K). Example: 250K = 250,000 followers."
+        help="Artist follower count in thousands (K). Example: 250K means 250,000 followers. This roughly reflects audience size."
     )
     st.markdown(f"<div class='metric-hint'>= {artist_followers_k*1000:,} followers</div>", unsafe_allow_html=True)
 
     danceability = st.slider(
         "💃 danceability", 0.0, 1.0, 0.50,
         key=f"dance_{st.session_state['reset_nonce']}",
-        help="How easy it feels to dance to this track (0–1)."
+        help="How suitable the track is for dancing (0–1). Higher values usually mean a clearer rhythm and more dance-friendly groove."
     )
 
     energy = st.slider(
         "🔋 energy", 0.0, 1.0, 0.50,
         key=f"energy_{st.session_state['reset_nonce']}",
-        help="How intense and energetic the track feels (0–1)."
+        help="Perceived intensity/activity (0–1). Higher values often feel louder, faster and more aggressive."
     )
 
     loudness = st.slider(
         "🔊 loudness (dB)", -20.0, 0.0, -8.0,
         key=f"loud_{st.session_state['reset_nonce']}",
-        help="Overall loudness in dB. Closer to 0 means louder mastering."
+        help="Overall loudness in dB. Closer to 0 means louder mastering. Many modern tracks fall roughly between -14 and -6 dB."
     )
 
 with c2:
     tempo = st.slider(
         "🥁 tempo (BPM)", 40.0, 220.0, 120.0,
         key=f"tempo_{st.session_state['reset_nonce']}",
-        help="Speed of the beat in BPM (beats per minute)."
+        help="Speed of the beat in BPM (beats per minute). 120 BPM is a common dance/pop tempo; slower values feel calmer."
     )
 
     artist_popularity = st.slider(
         "⭐ artist_popularity", 0, 100, 50,
         key=f"apop_{st.session_state['reset_nonce']}",
-        help="A 0–100 popularity score for the artist."
+        help="A 0–100 popularity score. Higher values typically indicate the artist is currently more listened-to on Spotify."
     )
 
     valence = st.slider(
         "😊 valence", 0.0, 1.0, 0.50,
         key=f"val_{st.session_state['reset_nonce']}",
-        help="Mood/positivity (0–1). Higher feels happier; lower feels sadder/darker."
+        help="Musical positivity (0–1). Higher feels happier/bright; lower feels sadder/darker."
     )
 
     release_year = st.slider(
         "📅 release_year", 1950, 2025, 2020,
         key=f"year_{st.session_state['reset_nonce']}",
-        help="Release year of the track."
+        help="The year the track was released. Use the actual release year (not recording year)."
     )
 
 with st.expander("🧪 Advanced (optional)", expanded=False):
     speechiness = st.slider(
         "🗣️ speechiness", 0.0, 1.0, 0.05,
         key=f"sp_{st.session_state['reset_nonce']}",
-        help="How much spoken-word content the track has (0–1)."
+        help="Presence of spoken words (0–1). Higher values often occur in rap, spoken-word, or talk-like vocals."
     )
 
     acousticness = st.slider(
         "🎻 acousticness", 0.0, 1.0, 0.20,
         key=f"ac_{st.session_state['reset_nonce']}",
-        help="How acoustic the track sounds (0–1)."
+        help="How acoustic the track sounds (0–1). Higher values usually mean more natural/unplugged instruments."
     )
 
     instrumentalness = st.slider(
         "🎼 instrumentalness", 0.0, 1.0, 0.00,
         key=f"ins_{st.session_state['reset_nonce']}",
-        help="Likelihood the track has no vocals (0–1)."
+        help="Likelihood of no vocals (0–1). Higher values mean the track is more likely instrumental."
     )
 
     liveness = st.slider(
         "🎤 liveness", 0.0, 1.0, 0.15,
         key=f"liv_{st.session_state['reset_nonce']}",
-        help="Likelihood it sounds like a live recording (0–1)."
+        help="Likelihood of a live audience/recording (0–1). Higher values can indicate live performance conditions."
     )
 
 row = {
@@ -401,7 +413,7 @@ X = X[FEATURES].replace([np.inf, -np.inf], np.nan).fillna(0.0)
 
 st.divider()
 
-if st.button("🎯 Predict", key=f"pred_{st.session_state['reset_nonce']}"):
+if st.button("🎯 Predict", key=f"pred_{st.session_state['reset_nonce']}", help="Run the prediction using the current inputs."):
     if hasattr(model, "predict_proba"):
         hit_prob = float(model.predict_proba(X)[:, 1][0])
     else:
