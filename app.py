@@ -29,19 +29,6 @@ h1 {margin-bottom: 0.15rem;}
   .block-container {padding-top: 3.6rem;}
   [data-testid="stImage"] img {margin-top: 14px;}
 }
-
-/* Force Expander header (Advanced optional bar) to be white in all themes */
-[data-testid="stExpander"] summary,
-[data-testid="stExpander"] summary * ,
-[data-testid="stExpander"] details > summary{
-  background:#ffffff !important;
-  color:#000000 !important;
-  border-radius: 12px !important;
-}
-[data-testid="stExpander"] summary svg{
-  fill:#000000 !important;
-  color:#000000 !important;
-}
 </style>
 """
 
@@ -131,6 +118,21 @@ div[data-testid="stToggle"] [data-baseweb="thumb"]{background:#ffffff!important;
   background:#111827!important;
   color:#ffffff!important;
   border:1px solid rgba(255,255,255,0.20)!important;
+}
+
+/* Expander header: force DARK look in DARK mode (prevents turning white on mobile reruns) */
+[data-testid="stExpander"] summary,
+[data-testid="stExpander"] details > summary{
+  background: var(--exp-bg) !important;
+  color: var(--txt) !important;
+  border-radius: 12px !important;
+}
+[data-testid="stExpander"] summary *{
+  color: var(--txt) !important;
+}
+[data-testid="stExpander"] summary svg{
+  fill: var(--txt) !important;
+  color: var(--txt) !important;
 }
 </style>
 """
@@ -240,6 +242,21 @@ button[aria-label="Help"] svg,
   color:#000000!important;
   fill:#000000!important;
   opacity:1!important;
+}
+
+/* Expander header: white only in LIGHT mode */
+[data-testid="stExpander"] summary,
+[data-testid="stExpander"] details > summary{
+  background:#ffffff !important;
+  color:#000000 !important;
+  border-radius: 12px !important;
+}
+[data-testid="stExpander"] summary *{
+  color:#000000 !important;
+}
+[data-testid="stExpander"] summary svg{
+  fill:#000000 !important;
+  color:#000000 !important;
 }
 </style>
 """
