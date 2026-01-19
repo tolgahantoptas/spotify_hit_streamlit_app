@@ -119,7 +119,7 @@ with g2:
         sub_list if sub_list else genres,
         index=0,
         key=f"alt_genre_{st.session_state['reset_nonce']}",
-        help="This is the genre label used by the model. The app converts it into track_genre_freq (how common the genre is in the training data)."
+        help="This is the genre label used by the model. The app converts it into track_genre_freq (how common the genre is)."
     )
 
 track_genre_freq = float(GENRE_FREQ_MAP.get(chosen_genre, 0.0))
@@ -131,58 +131,58 @@ with c1:
     duration_sec = st.slider(
         "⏱️ duration (sec)", 30, 900, 180,
         key=f"duration_{st.session_state['reset_nonce']}",
-        help="Track length in seconds. Most songs are ~120–240 seconds (2–4 minutes)."
+        help="Track length in seconds. Most songs are around 2–4 minutes."
     )
-    st.markdown(f"<div class='metric-hint'>≈ {duration_sec//60} min {duration_sec%60:02d} sec</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='metric-hint'>= {duration_sec//60} min {duration_sec%60:02d} sec</div>", unsafe_allow_html=True)
 
     artist_followers_k = st.slider(
         "👥 artist_followers (K)", 0, 150_000, 100, step=100,
         key=f"followers_{st.session_state['reset_nonce']}",
         help="Artist followers in thousands (K). Example: 250K means 250,000 followers."
     )
-    st.markdown(f"<div class='metric-hint'>≈ {artist_followers_k*1000:,} followers</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='metric-hint'>= {artist_followers_k*1000:,} followers</div>", unsafe_allow_html=True)
 
     danceability = st.slider(
         "💃 danceability", 0.0, 1.0, 0.50,
         key=f"dance_{st.session_state['reset_nonce']}",
-        help="How dance-friendly the track is (0–1). Higher values usually mean a steadier beat and easier rhythm for dancing."
+        help="How dance-friendly the track is (0–1). Higher values often mean a steadier beat and easier rhythm to move to."
     )
 
     energy = st.slider(
         "🔋 energy", 0.0, 1.0, 0.50,
         key=f"energy_{st.session_state['reset_nonce']}",
-        help="Perceived intensity and activity (0–1). Higher values often feel louder, faster, and more energetic."
+        help="Perceived intensity and activity (0–1). Higher values typically feel faster, louder, and more powerful."
     )
 
     loudness = st.slider(
         "🔊 loudness (dB)", -20.0, 0.0, -8.0,
         key=f"loud_{st.session_state['reset_nonce']}",
-        help="Average loudness in dB. Typical Spotify tracks are around -14 to -5 dB. Closer to 0 means louder mastering."
+        help="Average loudness in dB. Typical tracks are roughly -14 to -5 dB. Closer to 0 means louder mastering."
     )
 
 with c2:
     tempo = st.slider(
         "🥁 tempo (BPM)", 40.0, 220.0, 120.0,
         key=f"tempo_{st.session_state['reset_nonce']}",
-        help="Estimated tempo in beats per minute (BPM). Pop is often ~90–140 BPM."
+        help="Estimated tempo in beats per minute (BPM). Faster BPM usually feels more energetic."
     )
 
     artist_popularity = st.slider(
         "⭐ artist_popularity", 0, 100, 50,
         key=f"apop_{st.session_state['reset_nonce']}",
-        help="Spotify popularity score (0–100). Higher usually means the artist is more widely listened to right now."
+        help="Spotify popularity score (0–100). Higher values usually indicate a larger current listener interest."
     )
 
     valence = st.slider(
         "😊 valence", 0.0, 1.0, 0.50,
         key=f"val_{st.session_state['reset_nonce']}",
-        help="Musical positivity (0–1). Higher = happier/cheerful; lower = sad/angry."
+        help="Mood/positivity (0–1). Higher = happier/bright; lower = darker/sadder."
     )
 
     release_year = st.slider(
         "📅 release_year", 1950, 2025, 2020,
         key=f"year_{st.session_state['reset_nonce']}",
-        help="Release year of the track. Some years/eras may correlate with hit likelihood depending on the dataset."
+        help="The year the track was released. This can capture broad era effects (production style, listening trends, and how music is consumed)."
     )
 
 with st.expander("🧪 Advanced (optional)", expanded=False):
@@ -194,7 +194,7 @@ with st.expander("🧪 Advanced (optional)", expanded=False):
     acousticness = st.slider(
         "🎻 acousticness", 0.0, 1.0, 0.20,
         key=f"ac_{st.session_state['reset_nonce']}",
-        help="Probability the track is acoustic (0–1). Higher values usually mean more unplugged / acoustic sound."
+        help="Confidence the track is acoustic (0–1). Higher values usually mean more unplugged / acoustic sound."
     )
     instrumentalness = st.slider(
         "🎼 instrumentalness", 0.0, 1.0, 0.00,
@@ -204,7 +204,7 @@ with st.expander("🧪 Advanced (optional)", expanded=False):
     liveness = st.slider(
         "🎤 liveness", 0.0, 1.0, 0.15,
         key=f"liv_{st.session_state['reset_nonce']}",
-        help="Detects audience / live performance feeling (0–1). Higher values are more likely recorded live."
+        help="Detects audience/live performance feeling (0–1). Higher values are more likely recorded live."
     )
 
 row = {
@@ -232,7 +232,7 @@ X = X[FEATURES].replace([np.inf, -np.inf], np.nan).fillna(0.0)
 
 st.divider()
 
-if st.button("Predict", key=f"pred_{st.session_state['reset_nonce']}"):
+if st.button("🎯 Predict", key=f"pred_{st.session_state['reset_nonce']}"):
     if hasattr(model, "predict_proba"):
         hit_prob = float(model.predict_proba(X)[:, 1][0])
     else:
@@ -241,6 +241,6 @@ if st.button("Predict", key=f"pred_{st.session_state['reset_nonce']}"):
     non_hit_prob = float(1.0 - hit_prob)
 
     if hit_prob >= TH:
-        st.success(f"This song would be a HIT! (Hit probability: {hit_prob:.3f})")
+        st.success(f"✅ This song would be a HIT! (Hit probability: {hit_prob:.3f})")
     else:
-        st.warning(f"This song would NOT be a hit. (Non-hit probability: {non_hit_prob:.3f})")
+        st.warning(f"❌ This song would NOT be a hit. (Non-hit probability: {non_hit_prob:.3f})")
