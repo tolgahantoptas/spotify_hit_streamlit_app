@@ -80,7 +80,9 @@ div[role="option"]:hover, li[role="option"]:hover{background:var(--menu-hover)!i
   font-weight:650!important;
 }
 
-.stButton>button{
+div[data-testid="stButton"] > button,
+div[data-testid^="baseButton-"] > button,
+button[data-testid^="baseButton-"]{
   background:var(--btn-bg)!important;
   color:#ffffff!important;
   border:1px solid var(--btn-border)!important;
@@ -88,31 +90,26 @@ div[role="option"]:hover, li[role="option"]:hover{background:var(--menu-hover)!i
   font-weight:700!important;
   padding: 0.62rem 1.15rem!important;
 }
-.stButton>button *{color:#ffffff!important; opacity:1!important;}
-.stButton>button:hover{background:var(--btn-hover)!important;}
-.stButton>button:active{background:var(--btn-hover)!important; transform: translateY(0px)!important;}
-
-.stButton>button:disabled, .stButton>button[disabled]{
-  background:rgba(27,35,48,0.65)!important;
-  color:rgba(255,255,255,0.75)!important;
-}
-.stButton>button:disabled *,.stButton>button[disabled] *{
-  color:rgba(255,255,255,0.75)!important;
+div[data-testid="stButton"] > button * ,
+div[data-testid^="baseButton-"] > button * ,
+button[data-testid^="baseButton-"] *{
+  color:#ffffff!important;
   opacity:1!important;
 }
+div[data-testid="stButton"] > button:hover,
+div[data-testid^="baseButton-"] > button:hover,
+button[data-testid^="baseButton-"]:hover{
+  background:var(--btn-hover)!important;
+}
 
-[data-baseweb="toggle"] span{color:#ffffff!important; font-weight:800!important; opacity:1!important;}
-
-[data-baseweb="toggle"] [role="switch"],
-[data-baseweb="toggle"] [role="switch"][aria-checked="true"],
-[data-baseweb="toggle"] [role="switch"][aria-checked="false"]{
+div[data-testid="stToggle"] [role="switch"],
+div[data-testid="stToggle"] [role="switch"][aria-checked="true"],
+div[data-testid="stToggle"] [role="switch"][aria-checked="false"]{
   background:var(--toggle-red)!important;
   border:1px solid rgba(255,255,255,0.25)!important;
 }
-
-[data-baseweb="toggle"] [data-baseweb="thumb"]{
-  background:#ffffff!important;
-}
+div[data-testid="stToggle"] [data-baseweb="thumb"]{background:#ffffff!important;}
+div[data-testid="stToggle"] span{color:#ffffff!important; font-weight:800!important; opacity:1!important;}
 
 [data-testid="stTooltipContent"]{
   background:#111827!important;
@@ -132,7 +129,6 @@ LIGHT_CSS = """
  --control-border:rgba(0,0,0,0.32);
  --menu-hover:rgba(0,0,0,0.06);
  --btn-bg:#ffffff;
- --btn-hover:#ffffff;
  --btn-border:rgba(0,0,0,0.22);
  --exp-bg:#ffffff;
  --toggle-red:#e11d48;
@@ -172,56 +168,53 @@ div[role="option"]:hover, li[role="option"]:hover{background:var(--menu-hover)!i
   font-weight:650!important;
 }
 
-.stButton>button{
+div[data-testid="stButton"] > button,
+div[data-testid^="baseButton-"] > button,
+button[data-testid^="baseButton-"]{
   background:#ffffff!important;
   color:#000000!important;
-  border:1px solid rgba(0,0,0,0.22)!important;
+  border:1px solid var(--btn-border)!important;
   border-radius:12px!important;
   font-weight:800!important;
   padding: 0.62rem 1.15rem!important;
-  box-shadow: none!important;
+  box-shadow:none!important;
 }
-.stButton>button *{color:#000000!important; opacity:1!important;}
-.stButton>button:hover{
-  background:#ffffff!important;
+div[data-testid="stButton"] > button * ,
+div[data-testid^="baseButton-"] > button * ,
+button[data-testid^="baseButton-"] *{
   color:#000000!important;
-  box-shadow: none!important;
-}
-.stButton>button:active{
-  background:#ffffff!important;
-  color:#000000!important;
-  box-shadow: none!important;
-  transform: translateY(0px)!important;
-}
-
-.stButton>button:disabled, .stButton>button[disabled]{
-  background:rgba(255,255,255,0.70)!important;
-  color:rgba(0,0,0,0.55)!important;
-}
-.stButton>button:disabled *,.stButton>button[disabled] *{
-  color:rgba(0,0,0,0.55)!important;
   opacity:1!important;
 }
+div[data-testid="stButton"] > button:hover,
+div[data-testid^="baseButton-"] > button:hover,
+button[data-testid^="baseButton-"]:hover{
+  background:#ffffff!important;
+  color:#000000!important;
+  box-shadow:none!important;
+}
+div[data-testid="stButton"] > button:active,
+div[data-testid^="baseButton-"] > button:active,
+button[data-testid^="baseButton-"]:active{
+  background:#ffffff!important;
+  color:#000000!important;
+  box-shadow:none!important;
+  transform:none!important;
+}
 
-[data-baseweb="toggle"] span{color:#000000!important; font-weight:900!important; opacity:1!important;}
-
-[data-baseweb="toggle"] [role="switch"],
-[data-baseweb="toggle"] [role="switch"][aria-checked="true"],
-[data-baseweb="toggle"] [role="switch"][aria-checked="false"]{
+div[data-testid="stToggle"] [role="switch"],
+div[data-testid="stToggle"] [role="switch"][aria-checked="true"],
+div[data-testid="stToggle"] [role="switch"][aria-checked="false"]{
   background:var(--toggle-red)!important;
   border:1px solid rgba(0,0,0,0.18)!important;
 }
-
-[data-baseweb="toggle"] [data-baseweb="thumb"]{
-  background:#ffffff!important;
-}
+div[data-testid="stToggle"] [data-baseweb="thumb"]{background:#ffffff!important;}
+div[data-testid="stToggle"] span{color:#000000!important; font-weight:900!important; opacity:1!important;}
 
 [data-testid="stTooltipContent"]{
   background:#ffffff!important;
   color:#000000!important;
   border:1px solid rgba(0,0,0,0.18)!important;
 }
-
 [data-testid="stHelpIcon"] svg,
 button[aria-label="Help"] svg,
 [data-testid="stTooltipHoverTarget"] svg{
@@ -274,7 +267,7 @@ with top_r:
         "🌙 Dark mode",
         value=(st.session_state["theme_mode"] == "dark"),
         key=f"theme_toggle_{st.session_state['reset_nonce']}",
-        help="Switch between Dark and Light. The switch track stays the same red tone."
+        help="Switch between Dark and Light. The switch stays the same red tone."
     )
     new_mode = "dark" if is_dark else "light"
     if new_mode != st.session_state["theme_mode"]:
@@ -319,7 +312,7 @@ super_map = {
     "anime": "Other", "disney": "Other", "children": "Other", "comedy": "Other",
 }
 
-genres = sorted(GENRE_MAP_PATH and GENRE_FREQ_MAP.keys())
+genres = sorted(GENRE_FREQ_MAP.keys())
 genre_groups = sorted(set(super_map.get(g, "Other") for g in genres))
 
 st.header("🎛️ Genre Selection")
