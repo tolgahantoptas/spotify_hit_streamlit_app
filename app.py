@@ -17,40 +17,49 @@ st.set_page_config(page_title="Spotify Hit Predictor", layout="wide", page_icon=
 if "theme_mode" not in st.session_state:
     st.session_state["theme_mode"] = "dark"
 
-base_css = """
-<style>
-  .block-container {padding-top: 1.2rem; padding-bottom: 2.5rem;}
-  h1 {margin-bottom: 0.2rem;}
-  h2 {margin-top: 1.2rem;}
-  .stButton>button {border-radius: 10px; padding: 0.55rem 1.1rem;}
-  .stExpander {border-radius: 14px;}
-  [data-baseweb="slider"] {padding-top: 0.35rem;}
-  .metric-hint {color: rgba(255,255,255,0.75); font-size: 0.95rem; margin-top: -0.25rem;}
-  @media (max-width: 768px){
-    .block-container {padding-top: 2.2rem;}
-    [data-testid="stImage"] img {margin-top: 8px;}
-  }
-</style>
-"""
+st.markdown(
+    """
+    <style>
+      .block-container {padding-top: 2.4rem; padding-bottom: 2.5rem;}
+      h1 {margin-bottom: 0.2rem;}
+      h2 {margin-top: 1.2rem;}
+      .stButton>button {border-radius: 10px; padding: 0.55rem 1.1rem;}
+      .stExpander {border-radius: 14px;}
+      [data-baseweb="slider"] {padding-top: 0.35rem;}
+      .metric-hint {font-size: 0.95rem; margin-top: -0.25rem;}
+      @media (max-width: 768px){
+        .block-container {padding-top: 3.0rem;}
+        [data-testid="stImage"] img {margin-top: 10px;}
+      }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
-dark_css = """
-<style>
-  :root { --app-bg: #0e1117; --app-text: #e8e8e8; --hint: rgba(255,255,255,0.75); }
-  [data-testid="stAppViewContainer"] { background: var(--app-bg); color: var(--app-text); }
-  .metric-hint { color: var(--hint); }
-</style>
-"""
-
-light_css = """
-<style>
-  :root { --app-bg: #ffffff; --app-text: #111111; --hint: rgba(0,0,0,0.65); }
-  [data-testid="stAppViewContainer"] { background: var(--app-bg); color: var(--app-text); }
-  .metric-hint { color: var(--hint); }
-</style>
-"""
-
-st.markdown(base_css, unsafe_allow_html=True)
-st.markdown(dark_css if st.session_state["theme_mode"] == "dark" else light_css, unsafe_allow_html=True)
+if st.session_state["theme_mode"] == "dark":
+    st.markdown(
+        """
+        <style>
+          :root { --bg:#0e1117; --txt:#ffffff; --muted:rgba(255,255,255,0.75); }
+          [data-testid="stAppViewContainer"] { background: var(--bg) !important; }
+          h1,h2,h3,h4,h5,h6,p,span,label,div { color: var(--txt) !important; }
+          .metric-hint { color: var(--muted) !important; }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+else:
+    st.markdown(
+        """
+        <style>
+          :root { --bg:#ffffff; --txt:#000000; --muted:rgba(0,0,0,0.70); }
+          [data-testid="stAppViewContainer"] { background: var(--bg) !important; }
+          h1,h2,h3,h4,h5,h6,p,span,label,div { color: var(--txt) !important; }
+          .metric-hint { color: var(--muted) !important; }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
 @st.cache_resource
 def load_artifacts():
@@ -102,7 +111,7 @@ with top_l:
             st.write("🎵")
     with h2:
         st.title("Spotify Hit Predictor")
-        st.caption("Choose a genre, set the audio/artist features, then click Predict. Use the ? icons for short, practical explanations.")
+        st.caption("Choose a genre, set the audio and artist features, then click Predict. Use the ? icons for short explanations.")
 
 st.button("🔄 Reset", on_click=do_reset, key="reset_btn")
 
@@ -228,16 +237,19 @@ with st.expander("🧪 Advanced (optional)", expanded=False):
         key=f"sp_{st.session_state['reset_nonce']}",
         help="How much spoken-word content the track has (0–1). Higher values often appear in rap or spoken-word tracks."
     )
+
     acousticness = st.slider(
         "🎻 acousticness", 0.0, 1.0, 0.20,
         key=f"ac_{st.session_state['reset_nonce']}",
         help="How acoustic the track sounds (0–1). Higher values usually mean more unplugged / acoustic instrumentation."
     )
+
     instrumentalness = st.slider(
         "🎼 instrumentalness", 0.0, 1.0, 0.00,
         key=f"ins_{st.session_state['reset_nonce']}",
         help="Likelihood of no vocals (0–1). Near 0 means vocals are present; higher means mostly instrumental."
     )
+
     liveness = st.slider(
         "🎤 liveness", 0.0, 1.0, 0.15,
         key=f"liv_{st.session_state['reset_nonce']}",
