@@ -97,6 +97,7 @@ div[role="option"]:hover, li[role="option"]:hover{
 }
 .stButton>button *{color:#ffffff!important; opacity:1!important;}
 .stButton>button:hover{background:var(--btn-hover)!important;}
+
 .stButton>button:disabled, .stButton>button[disabled]{
   background:rgba(27,35,48,0.65)!important;
   color:rgba(255,255,255,0.75)!important;
@@ -189,6 +190,7 @@ div[role="option"]:hover, li[role="option"]:hover{
 }
 .stButton>button *{color:#000000!important; opacity:1!important;}
 .stButton>button:hover{background:var(--btn-hover)!important;}
+
 .stButton>button:disabled, .stButton>button[disabled]{
   background:rgba(243,244,246,0.75)!important;
   color:rgba(0,0,0,0.70)!important;
@@ -210,6 +212,14 @@ div[role="option"]:hover, li[role="option"]:hover{
   background:#ffffff!important;
   color:#000000!important;
   border:1px solid rgba(0,0,0,0.18)!important;
+}
+
+[data-testid="stHelpIcon"] svg,
+button[aria-label="Help"] svg,
+[data-testid="stTooltipHoverTarget"] svg{
+  color:#000000!important;
+  fill:#000000!important;
+  opacity:1!important;
 }
 </style>
 """
