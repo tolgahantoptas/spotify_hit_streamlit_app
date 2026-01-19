@@ -19,14 +19,14 @@ if "theme_mode" not in st.session_state:
 
 COMMON_CSS = """
 <style>
-  .block-container {padding-top: 2.4rem; padding-bottom: 2.5rem;}
+  .block-container {padding-top: 2.6rem; padding-bottom: 2.5rem;}
   h1 {margin-bottom: 0.2rem;}
   h2 {margin-top: 1.2rem;}
   .stExpander {border-radius: 14px;}
   [data-baseweb="slider"] {padding-top: 0.35rem;}
   .metric-hint {font-size: 0.95rem; margin-top: -0.25rem;}
   @media (max-width: 768px){
-    .block-container {padding-top: 3.0rem;}
+    .block-container {padding-top: 3.2rem;}
     [data-testid="stImage"] img {margin-top: 10px;}
   }
 </style>
@@ -37,20 +37,24 @@ DARK_CSS = """
   :root{
     --bg:#0e1117;
     --txt:#ffffff;
-    --muted:rgba(255,255,255,0.80);
+    --muted:rgba(255,255,255,0.88);
 
-    --control-bg:#1a1f2a;
-    --control-border:rgba(255,255,255,0.16);
+    --control-bg:#141a24;
+    --control-border:rgba(255,255,255,0.28);
     --control-txt:#ffffff;
 
-    --menu-bg:#1a1f2a;
+    --menu-bg:#141a24;
     --menu-txt:#ffffff;
-    --menu-hover:rgba(255,255,255,0.12);
+    --menu-hover:rgba(255,255,255,0.14);
 
     --btn-bg:#1b2330;
-    --btn-border:rgba(255,255,255,0.18);
+    --btn-border:rgba(255,255,255,0.28);
     --btn-txt:#ffffff;
     --btn-hover:#263244;
+
+    --toggle-track:#334155;
+    --toggle-thumb:#ffffff;
+    --toggle-label:#ffffff;
   }
 
   [data-testid="stAppViewContainer"] { background: var(--bg) !important; }
@@ -61,7 +65,8 @@ DARK_CSS = """
   [data-testid="stMarkdownContainer"] li,
   [data-testid="stCaptionContainer"],
   .stCaption,
-  label, small { color: var(--txt) !important; }
+  label, small,
+  [data-testid="stWidgetLabel"] * { color: var(--txt) !important; opacity: 1 !important; }
 
   .metric-hint { color: var(--muted) !important; }
 
@@ -71,35 +76,38 @@ DARK_CSS = """
   }
   div[data-baseweb="select"] span{
     color: var(--control-txt) !important;
+    opacity: 1 !important;
+  }
+  div[data-baseweb="select"] input{
+    color: var(--control-txt) !important;
+    -webkit-text-fill-color: var(--control-txt) !important;
+    opacity: 1 !important;
+  }
+  div[data-baseweb="select"] svg{
+    fill: var(--control-txt) !important;
+    color: var(--control-txt) !important;
   }
 
-  div[role="listbox"],
-  ul[role="listbox"]{
+  div[role="listbox"], ul[role="listbox"]{
     background: var(--menu-bg) !important;
     color: var(--menu-txt) !important;
     border: 1px solid var(--control-border) !important;
   }
-
-  div[role="option"],
-  li[role="option"]{
+  div[role="option"], li[role="option"]{
     background: var(--menu-bg) !important;
     color: var(--menu-txt) !important;
   }
-
-  div[role="option"][aria-selected="true"],
-  li[role="option"][aria-selected="true"]{
+  div[role="option"][aria-selected="true"], li[role="option"][aria-selected="true"]{
     background: var(--menu-hover) !important;
   }
-
-  div[role="option"]:hover,
-  li[role="option"]:hover{
+  div[role="option"]:hover, li[role="option"]:hover{
     background: var(--menu-hover) !important;
   }
 
   [data-testid="stTooltipContent"]{
     background: #111827 !important;
     color: #ffffff !important;
-    border: 1px solid rgba(255,255,255,0.14) !important;
+    border: 1px solid rgba(255,255,255,0.20) !important;
   }
 
   .stButton>button{
@@ -108,24 +116,37 @@ DARK_CSS = """
     border: 1px solid var(--btn-border) !important;
     border-radius: 10px !important;
     padding: 0.55rem 1.1rem !important;
+    font-weight: 650 !important;
   }
   .stButton>button *{ color: var(--btn-txt) !important; }
   .stButton>button:hover{
     background: var(--btn-hover) !important;
-    border-color: rgba(255,255,255,0.28) !important;
-  }
-  .stButton>button:active{
-    background: var(--btn-hover) !important;
+    border-color: rgba(255,255,255,0.42) !important;
   }
 
-  [data-baseweb="checkbox"] * { color: var(--txt) !important; }
-  [data-baseweb="radio"] * { color: var(--txt) !important; }
-  [data-baseweb="toggle"] * { color: var(--txt) !important; }
-
-  [data-baseweb="input"] input{
+  [data-baseweb="accordion"] button,
+  [data-baseweb="accordion"] div,
+  [data-baseweb="accordion"] span{
     color: var(--txt) !important;
-    background: var(--control-bg) !important;
-    border-color: var(--control-border) !important;
+    opacity: 1 !important;
+    font-weight: 650 !important;
+  }
+
+  [data-baseweb="toggle"] span{
+    color: var(--toggle-label) !important;
+    opacity: 1 !important;
+    font-weight: 750 !important;
+  }
+  [data-baseweb="toggle"] [role="switch"]{
+    background: var(--toggle-track) !important;
+    border: 1px solid rgba(255,255,255,0.28) !important;
+  }
+  [data-baseweb="toggle"] [role="switch"][aria-checked="true"]{
+    background: #1db954 !important;
+    border: 1px solid rgba(255,255,255,0.28) !important;
+  }
+  [data-baseweb="toggle"] [data-baseweb="thumb"]{
+    background: var(--toggle-thumb) !important;
   }
 </style>
 """
@@ -135,10 +156,10 @@ LIGHT_CSS = """
   :root{
     --bg:#ffffff;
     --txt:#000000;
-    --muted:rgba(0,0,0,0.75);
+    --muted:rgba(0,0,0,0.80);
 
     --control-bg:#ffffff;
-    --control-border:rgba(0,0,0,0.20);
+    --control-border:rgba(0,0,0,0.32);
     --control-txt:#000000;
 
     --menu-bg:#ffffff;
@@ -146,9 +167,13 @@ LIGHT_CSS = """
     --menu-hover:rgba(0,0,0,0.06);
 
     --btn-bg:#f3f4f6;
-    --btn-border:rgba(0,0,0,0.18);
+    --btn-border:rgba(0,0,0,0.30);
     --btn-txt:#000000;
     --btn-hover:#e5e7eb;
+
+    --toggle-track:#e5e7eb;
+    --toggle-thumb:#111111;
+    --toggle-label:#000000;
   }
 
   [data-testid="stAppViewContainer"] { background: var(--bg) !important; }
@@ -159,7 +184,8 @@ LIGHT_CSS = """
   [data-testid="stMarkdownContainer"] li,
   [data-testid="stCaptionContainer"],
   .stCaption,
-  label, small { color: var(--txt) !important; }
+  label, small,
+  [data-testid="stWidgetLabel"] * { color: var(--txt) !important; opacity: 1 !important; }
 
   .metric-hint { color: var(--muted) !important; }
 
@@ -169,35 +195,38 @@ LIGHT_CSS = """
   }
   div[data-baseweb="select"] span{
     color: var(--control-txt) !important;
+    opacity: 1 !important;
+  }
+  div[data-baseweb="select"] input{
+    color: var(--control-txt) !important;
+    -webkit-text-fill-color: var(--control-txt) !important;
+    opacity: 1 !important;
+  }
+  div[data-baseweb="select"] svg{
+    fill: var(--control-txt) !important;
+    color: var(--control-txt) !important;
   }
 
-  div[role="listbox"],
-  ul[role="listbox"]{
+  div[role="listbox"], ul[role="listbox"]{
     background: var(--menu-bg) !important;
     color: var(--menu-txt) !important;
     border: 1px solid var(--control-border) !important;
   }
-
-  div[role="option"],
-  li[role="option"]{
+  div[role="option"], li[role="option"]{
     background: var(--menu-bg) !important;
     color: var(--menu-txt) !important;
   }
-
-  div[role="option"][aria-selected="true"],
-  li[role="option"][aria-selected="true"]{
+  div[role="option"][aria-selected="true"], li[role="option"][aria-selected="true"]{
     background: var(--menu-hover) !important;
   }
-
-  div[role="option"]:hover,
-  li[role="option"]:hover{
+  div[role="option"]:hover, li[role="option"]:hover{
     background: var(--menu-hover) !important;
   }
 
   [data-testid="stTooltipContent"]{
     background: #ffffff !important;
     color: #000000 !important;
-    border: 1px solid rgba(0,0,0,0.15) !important;
+    border: 1px solid rgba(0,0,0,0.18) !important;
   }
 
   .stButton>button{
@@ -206,19 +235,38 @@ LIGHT_CSS = """
     border: 1px solid var(--btn-border) !important;
     border-radius: 10px !important;
     padding: 0.55rem 1.1rem !important;
+    font-weight: 650 !important;
   }
   .stButton>button *{ color: var(--btn-txt) !important; }
   .stButton>button:hover{
     background: var(--btn-hover) !important;
-    border-color: rgba(0,0,0,0.28) !important;
-  }
-  .stButton>button:active{
-    background: var(--btn-hover) !important;
+    border-color: rgba(0,0,0,0.44) !important;
   }
 
-  [data-baseweb="checkbox"] * { color: var(--txt) !important; }
-  [data-baseweb="radio"] * { color: var(--txt) !important; }
-  [data-baseweb="toggle"] * { color: var(--txt) !important; }
+  [data-baseweb="accordion"] button,
+  [data-baseweb="accordion"] div,
+  [data-baseweb="accordion"] span{
+    color: var(--txt) !important;
+    opacity: 1 !important;
+    font-weight: 650 !important;
+  }
+
+  [data-baseweb="toggle"] span{
+    color: var(--toggle-label) !important;
+    opacity: 1 !important;
+    font-weight: 800 !important;
+  }
+  [data-baseweb="toggle"] [role="switch"]{
+    background: var(--toggle-track) !important;
+    border: 1px solid rgba(0,0,0,0.26) !important;
+  }
+  [data-baseweb="toggle"] [role="switch"][aria-checked="true"]{
+    background: #1db954 !important;
+    border: 1px solid rgba(0,0,0,0.26) !important;
+  }
+  [data-baseweb="toggle"] [data-baseweb="thumb"]{
+    background: var(--toggle-thumb) !important;
+  }
 </style>
 """
 
