@@ -29,6 +29,19 @@ h1 {margin-bottom: 0.15rem;}
   .block-container {padding-top: 3.6rem;}
   [data-testid="stImage"] img {margin-top: 14px;}
 }
+
+/* Force Expander header (Advanced optional bar) to be white in all themes */
+[data-testid="stExpander"] summary,
+[data-testid="stExpander"] summary * ,
+[data-testid="stExpander"] details > summary{
+  background:#ffffff !important;
+  color:#000000 !important;
+  border-radius: 12px !important;
+}
+[data-testid="stExpander"] summary svg{
+  fill:#000000 !important;
+  color:#000000 !important;
+}
 </style>
 """
 
@@ -320,7 +333,7 @@ with g1:
         genre_groups,
         index=genre_groups.index(default_group),
         key=f"genre_group_{st.session_state['reset_nonce']}",
-        help="Step 1/2: A broad category to make selection easier. Choose the general style first (e.g., Pop, Rock/Metal)."
+        help="Step 1/2: Choose a broad category first (e.g., Pop, Rock/Metal). This makes the next list shorter and easier."
     )
 
 with g2:
@@ -331,7 +344,7 @@ with g2:
         sub_list,
         index=0,
         key=f"alt_genre_{st.session_state['reset_nonce']}",
-        help="Step 2/2: Pick the specific sub-style within the chosen category."
+        help="Step 2/2: Pick the specific style inside the chosen category."
     )
 
 track_genre_freq = float(GENRE_FREQ_MAP.get(chosen_genre, 0.0))
@@ -344,7 +357,7 @@ with c1:
         "⏱️ duration (sec)",
         30, 900, 180,
         key=f"duration_{st.session_state['reset_nonce']}",
-        help="Track length in seconds. For example, 180 sec = 3 min 00 sec."
+        help="Track length in seconds. Example: 180 sec = 3 min 00 sec."
     )
     st.markdown(f"<div class='metric-hint'>= {duration_sec//60} min {duration_sec%60:02d} sec</div>", unsafe_allow_html=True)
 
@@ -353,7 +366,7 @@ with c1:
         0, 150_000, 100,
         step=100,
         key=f"followers_{st.session_state['reset_nonce']}",
-        help="Artist followers in thousands (K). For example, 250K = 250,000 followers."
+        help="Artist followers in thousands (K). Example: 250K = 250,000 followers."
     )
     st.markdown(f"<div class='metric-hint'>= {artist_followers_k*1000:,} followers</div>", unsafe_allow_html=True)
 
