@@ -40,10 +40,63 @@ if st.session_state["theme_mode"] == "dark":
     st.markdown(
         """
         <style>
-          :root { --bg:#0e1117; --txt:#ffffff; --muted:rgba(255,255,255,0.75); }
+          :root{
+            --bg:#0e1117;
+            --txt:#ffffff;
+            --muted:rgba(255,255,255,0.78);
+
+            --control-bg:#1a1f2a;
+            --control-border:rgba(255,255,255,0.14);
+            --control-txt:#ffffff;
+
+            --menu-bg:#1a1f2a;
+            --menu-txt:#ffffff;
+            --menu-hover:rgba(255,255,255,0.10);
+          }
+
           [data-testid="stAppViewContainer"] { background: var(--bg) !important; }
-          h1,h2,h3,h4,h5,h6,p,span,label,div { color: var(--txt) !important; }
+
+          h1,h2,h3,h4,h5,h6 { color: var(--txt) !important; }
+          [data-testid="stMarkdownContainer"] p,
+          [data-testid="stMarkdownContainer"] span,
+          [data-testid="stMarkdownContainer"] li,
+          [data-testid="stCaptionContainer"],
+          .stCaption,
+          label, small { color: var(--txt) !important; }
+
           .metric-hint { color: var(--muted) !important; }
+
+          div[data-baseweb="select"] > div{
+            background: var(--control-bg) !important;
+            border-color: var(--control-border) !important;
+          }
+          div[data-baseweb="select"] span{
+            color: var(--control-txt) !important;
+          }
+
+          div[role="listbox"]{
+            background: var(--menu-bg) !important;
+            color: var(--menu-txt) !important;
+            border: 1px solid var(--control-border) !important;
+          }
+          div[role="option"]{
+            background: var(--menu-bg) !important;
+            color: var(--menu-txt) !important;
+          }
+          div[role="option"][aria-selected="true"]{
+            background: var(--menu-hover) !important;
+          }
+          div[role="option"]:hover{
+            background: var(--menu-hover) !important;
+          }
+
+          [data-baseweb="popover"] * { color: var(--menu-txt) !important; }
+
+          [data-testid="stTooltipContent"]{
+            background: #111827 !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255,255,255,0.12) !important;
+          }
         </style>
         """,
         unsafe_allow_html=True
@@ -52,10 +105,63 @@ else:
     st.markdown(
         """
         <style>
-          :root { --bg:#ffffff; --txt:#000000; --muted:rgba(0,0,0,0.70); }
+          :root{
+            --bg:#ffffff;
+            --txt:#000000;
+            --muted:rgba(0,0,0,0.72);
+
+            --control-bg:#ffffff;
+            --control-border:rgba(0,0,0,0.18);
+            --control-txt:#000000;
+
+            --menu-bg:#ffffff;
+            --menu-txt:#000000;
+            --menu-hover:rgba(0,0,0,0.06);
+          }
+
           [data-testid="stAppViewContainer"] { background: var(--bg) !important; }
-          h1,h2,h3,h4,h5,h6,p,span,label,div { color: var(--txt) !important; }
+
+          h1,h2,h3,h4,h5,h6 { color: var(--txt) !important; }
+          [data-testid="stMarkdownContainer"] p,
+          [data-testid="stMarkdownContainer"] span,
+          [data-testid="stMarkdownContainer"] li,
+          [data-testid="stCaptionContainer"],
+          .stCaption,
+          label, small { color: var(--txt) !important; }
+
           .metric-hint { color: var(--muted) !important; }
+
+          div[data-baseweb="select"] > div{
+            background: var(--control-bg) !important;
+            border-color: var(--control-border) !important;
+          }
+          div[data-baseweb="select"] span{
+            color: var(--control-txt) !important;
+          }
+
+          div[role="listbox"]{
+            background: var(--menu-bg) !important;
+            color: var(--menu-txt) !important;
+            border: 1px solid var(--control-border) !important;
+          }
+          div[role="option"]{
+            background: var(--menu-bg) !important;
+            color: var(--menu-txt) !important;
+          }
+          div[role="option"][aria-selected="true"]{
+            background: var(--menu-hover) !important;
+          }
+          div[role="option"]:hover{
+            background: var(--menu-hover) !important;
+          }
+
+          [data-baseweb="popover"] * { color: var(--menu-txt) !important; }
+
+          [data-testid="stTooltipContent"]{
+            background: #ffffff !important;
+            color: #000000 !important;
+            border: 1px solid rgba(0,0,0,0.15) !important;
+          }
         </style>
         """,
         unsafe_allow_html=True
