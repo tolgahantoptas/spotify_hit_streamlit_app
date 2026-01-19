@@ -38,7 +38,6 @@ DARK_CSS = """
  --muted:rgba(255,255,255,0.86);
  --control-bg:#141a24;
  --control-border:rgba(255,255,255,0.30);
- --menu-bg:#ffffff;
  --menu-hover:rgba(0,0,0,0.06);
  --btn-bg:#1b2330;
  --btn-hover:#263244;
@@ -91,14 +90,29 @@ div[role="option"]:hover, li[role="option"]:hover{
 .stButton>button{
   background:var(--btn-bg)!important;
   color:#ffffff!important;
-  border-radius:10px!important;
-  font-weight:650!important;
+  border:1px solid rgba(255,255,255,0.18)!important;
+  border-radius:12px!important;
+  font-weight:700!important;
+  padding: 0.62rem 1.15rem!important;
 }
 .stButton>button *{color:#ffffff!important; opacity:1!important;}
 .stButton>button:hover{background:var(--btn-hover)!important;}
+.stButton>button:disabled, .stButton>button[disabled]{
+  background:rgba(27,35,48,0.65)!important;
+  color:rgba(255,255,255,0.75)!important;
+}
+.stButton>button:disabled *,.stButton>button[disabled] *{
+  color:rgba(255,255,255,0.75)!important;
+  opacity:1!important;
+}
 
-[data-baseweb="toggle"] span{color:#ffffff!important; font-weight:750!important; opacity:1!important;}
+[data-baseweb="toggle"] span{color:#ffffff!important; font-weight:800!important; opacity:1!important;}
+[data-baseweb="toggle"] [role="switch"]{
+  background:#334155!important;
+  border:1px solid rgba(255,255,255,0.22)!important;
+}
 [data-baseweb="toggle"] [role="switch"][aria-checked="true"]{background:#1db954!important;}
+[data-baseweb="toggle"] [data-baseweb="thumb"]{background:#ffffff!important;}
 
 [data-testid="stTooltipContent"]{
   background:#111827!important;
@@ -116,7 +130,6 @@ LIGHT_CSS = """
  --muted:rgba(0,0,0,0.82);
  --control-bg:#ffffff;
  --control-border:rgba(0,0,0,0.32);
- --menu-bg:#ffffff;
  --menu-hover:rgba(0,0,0,0.06);
  --btn-bg:#f3f4f6;
  --btn-hover:#e5e7eb;
@@ -169,14 +182,29 @@ div[role="option"]:hover, li[role="option"]:hover{
 .stButton>button{
   background:var(--btn-bg)!important;
   color:#000000!important;
-  border-radius:10px!important;
-  font-weight:650!important;
+  border:1px solid rgba(0,0,0,0.16)!important;
+  border-radius:12px!important;
+  font-weight:700!important;
+  padding: 0.62rem 1.15rem!important;
 }
 .stButton>button *{color:#000000!important; opacity:1!important;}
 .stButton>button:hover{background:var(--btn-hover)!important;}
+.stButton>button:disabled, .stButton>button[disabled]{
+  background:rgba(243,244,246,0.75)!important;
+  color:rgba(0,0,0,0.70)!important;
+}
+.stButton>button:disabled *,.stButton>button[disabled] *{
+  color:rgba(0,0,0,0.70)!important;
+  opacity:1!important;
+}
 
-[data-baseweb="toggle"] span{color:#000000!important; font-weight:800!important; opacity:1!important;}
+[data-baseweb="toggle"] span{color:#000000!important; font-weight:850!important; opacity:1!important;}
+[data-baseweb="toggle"] [role="switch"]{
+  background:#e5e7eb!important;
+  border:1px solid rgba(0,0,0,0.18)!important;
+}
 [data-baseweb="toggle"] [role="switch"][aria-checked="true"]{background:#1db954!important;}
+[data-baseweb="toggle"] [data-baseweb="thumb"]{background:#111111!important;}
 
 [data-testid="stTooltipContent"]{
   background:#ffffff!important;
@@ -286,7 +314,7 @@ with g1:
         genre_groups,
         index=genre_groups.index(default_group),
         key=f"genre_group_{st.session_state['reset_nonce']}",
-        help="Step 1/2: Pick a broad style. This only filters the list so you can find the right sound faster (it does not block any option)."
+        help="Step 1/2: Choose a broad genre family. This is only a filter to help you find the right style faster."
     )
 
 with g2:
@@ -297,7 +325,7 @@ with g2:
         sub_list,
         index=0,
         key=f"alt_genre_{st.session_state['reset_nonce']}",
-        help="Step 2/2: Pick the specific sub-style you want. This selection is used to assign a frequency value for that genre."
+        help="Step 2/2: Choose the specific style inside the selected family."
     )
 
 track_genre_freq = float(GENRE_FREQ_MAP.get(chosen_genre, 0.0))
@@ -309,83 +337,83 @@ with c1:
     duration_sec = st.slider(
         "⏱️ duration (sec)", 30, 900, 180,
         key=f"duration_{st.session_state['reset_nonce']}",
-        help="Total track length in seconds. A typical pop song is ~180–240 seconds, but you can set any realistic value."
+        help="Total track length in seconds. Example: 180 sec equals 3 minutes."
     )
     st.markdown(f"<div class='metric-hint'>= {duration_sec//60} min {duration_sec%60:02d} sec</div>", unsafe_allow_html=True)
 
     artist_followers_k = st.slider(
         "👥 artist_followers (K)", 0, 150_000, 100, step=100,
         key=f"followers_{st.session_state['reset_nonce']}",
-        help="Artist follower count in thousands (K). Example: 250K means 250,000 followers. This roughly reflects audience size."
+        help="Artist follower count in thousands (K). Example: 250K equals 250,000 followers."
     )
     st.markdown(f"<div class='metric-hint'>= {artist_followers_k*1000:,} followers</div>", unsafe_allow_html=True)
 
     danceability = st.slider(
         "💃 danceability", 0.0, 1.0, 0.50,
         key=f"dance_{st.session_state['reset_nonce']}",
-        help="How suitable the track is for dancing (0–1). Higher values usually mean a clearer rhythm and more dance-friendly groove."
+        help="Dance-friendliness (0–1). Higher means a clearer rhythm and easier groove to dance to."
     )
 
     energy = st.slider(
         "🔋 energy", 0.0, 1.0, 0.50,
         key=f"energy_{st.session_state['reset_nonce']}",
-        help="Perceived intensity/activity (0–1). Higher values often feel louder, faster and more aggressive."
+        help="Intensity (0–1). Higher feels more powerful, loud, and fast."
     )
 
     loudness = st.slider(
         "🔊 loudness (dB)", -20.0, 0.0, -8.0,
         key=f"loud_{st.session_state['reset_nonce']}",
-        help="Overall loudness in dB. Closer to 0 means louder mastering. Many modern tracks fall roughly between -14 and -6 dB."
+        help="Overall loudness. Closer to 0 means louder mastering. Many tracks are around -14 to -6 dB."
     )
 
 with c2:
     tempo = st.slider(
         "🥁 tempo (BPM)", 40.0, 220.0, 120.0,
         key=f"tempo_{st.session_state['reset_nonce']}",
-        help="Speed of the beat in BPM (beats per minute). 120 BPM is a common dance/pop tempo; slower values feel calmer."
+        help="Beat speed in BPM (beats per minute). 120 BPM is common for pop/dance."
     )
 
     artist_popularity = st.slider(
         "⭐ artist_popularity", 0, 100, 50,
         key=f"apop_{st.session_state['reset_nonce']}",
-        help="A 0–100 popularity score. Higher values typically indicate the artist is currently more listened-to on Spotify."
+        help="Spotify popularity score (0–100). Higher means the artist is currently listened to more."
     )
 
     valence = st.slider(
         "😊 valence", 0.0, 1.0, 0.50,
         key=f"val_{st.session_state['reset_nonce']}",
-        help="Musical positivity (0–1). Higher feels happier/bright; lower feels sadder/darker."
+        help="Musical positivity (0–1). Higher = happier/bright; lower = sadder/darker."
     )
 
     release_year = st.slider(
         "📅 release_year", 1950, 2025, 2020,
         key=f"year_{st.session_state['reset_nonce']}",
-        help="The year the track was released. Use the actual release year (not recording year)."
+        help="Release year of the track."
     )
 
 with st.expander("🧪 Advanced (optional)", expanded=False):
     speechiness = st.slider(
         "🗣️ speechiness", 0.0, 1.0, 0.05,
         key=f"sp_{st.session_state['reset_nonce']}",
-        help="Presence of spoken words (0–1). Higher values often occur in rap, spoken-word, or talk-like vocals."
+        help="Spoken-word content (0–1). Higher values often happen in rap or talk-like vocals."
     )
 
     acousticness = st.slider(
         "🎻 acousticness", 0.0, 1.0, 0.20,
         key=f"ac_{st.session_state['reset_nonce']}",
-        help="How acoustic the track sounds (0–1). Higher values usually mean more natural/unplugged instruments."
+        help="Acoustic feel (0–1). Higher values usually mean more natural/unplugged instruments."
     )
 
     instrumentalness = st.slider(
         "🎼 instrumentalness", 0.0, 1.0, 0.00,
         key=f"ins_{st.session_state['reset_nonce']}",
-        help="Likelihood of no vocals (0–1). Higher values mean the track is more likely instrumental."
+        help="Likelihood of no vocals (0–1). Higher means more likely instrumental."
     )
 
     liveness = st.slider(
         "🎤 liveness", 0.0, 1.0, 0.15,
         key=f"liv_{st.session_state['reset_nonce']}",
-        help="Likelihood of a live audience/recording (0–1). Higher values can indicate live performance conditions."
+        help="Live recording likelihood (0–1). Higher can indicate an audience or live setting."
     )
 
 row = {
