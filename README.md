@@ -142,4 +142,12 @@ This makes the project suitable for:
 - Academic or applied ML studies
 
 ---
+## 👤 Author
 
+**Tolgahan Toptaş**  
+Machine Learning / Data Science
+
+## 📄 License
+
+This project is intended for **educational and research purposes**.  
+Commercial use requires permission.
