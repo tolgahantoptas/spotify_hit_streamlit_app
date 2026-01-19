@@ -23,7 +23,6 @@ st.markdown(
       .stButton>button {border-radius: 10px; padding: 0.55rem 1.1rem;}
       .stExpander {border-radius: 14px;}
       [data-baseweb="slider"] {padding-top: 0.35rem;}
-      .small-muted {color: rgba(255,255,255,0.65); font-size: 0.9rem;}
       .metric-hint {color: rgba(255,255,255,0.75); font-size: 0.95rem; margin-top: -0.25rem;}
     </style>
     """,
@@ -67,26 +66,6 @@ with h1:
 with h2:
     st.title("Spotify Hit Predictor")
     st.caption("Choose a genre, set the audio/artist features, then click Predict. Use the ? icons for short, practical explanations.")
-
-with st.sidebar:
-    keep_alive = st.checkbox(
-        "Keep alive (auto-refresh every 5 min)",
-        value=True,
-        key=f"keepalive_{st.session_state['reset_nonce']}",
-        help="Helps keep your session active while this page is open. For Streamlit Cloud, an external ping (e.g., UptimeRobot) is recommended to reduce sleeping."
-    )
-    st.markdown(
-        """
-        <div class="small-muted">
-        Streamlit Cloud apps may sleep when inactive.  
-        Recommended: set up an external HTTP monitor (e.g., UptimeRobot) to ping your app URL every 5 minutes.
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-if keep_alive:
-    st.markdown('<meta http-equiv="refresh" content="300">', unsafe_allow_html=True)
 
 st.button("🔄 Reset", on_click=do_reset, key="reset_btn")
 
