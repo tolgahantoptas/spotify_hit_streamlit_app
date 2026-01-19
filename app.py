@@ -44,8 +44,8 @@ DARK_CSS = """
  --btn-border:rgba(255,255,255,0.18);
  --exp-bg:#141a24;
  --toggle-red:#e11d48;
- --toggle-track:#334155;
 }
+
 [data-testid="stAppViewContainer"]{background:var(--bg)!important;}
 h1,h2,h3,h4,h5,h6,p,span,label,small{color:#ffffff!important;opacity:1!important;}
 .metric-hint{color:var(--muted)!important;}
@@ -73,8 +73,11 @@ div[role="option"]:hover, li[role="option"]:hover{background:var(--menu-hover)!i
   border-radius: 14px!important;
   border: 1px solid rgba(255,255,255,0.18)!important;
 }
-[data-baseweb="accordion"] button, [data-baseweb="accordion"] span{
-  color:#ffffff!important; opacity:1!important; font-weight:650!important;
+[data-baseweb="accordion"] button,
+[data-baseweb="accordion"] span{
+  color:#ffffff!important;
+  opacity:1!important;
+  font-weight:650!important;
 }
 
 .stButton>button{
@@ -87,6 +90,7 @@ div[role="option"]:hover, li[role="option"]:hover{background:var(--menu-hover)!i
 }
 .stButton>button *{color:#ffffff!important; opacity:1!important;}
 .stButton>button:hover{background:var(--btn-hover)!important;}
+.stButton>button:active{background:var(--btn-hover)!important; transform: translateY(0px)!important;}
 
 .stButton>button:disabled, .stButton>button[disabled]{
   background:rgba(27,35,48,0.65)!important;
@@ -98,15 +102,17 @@ div[role="option"]:hover, li[role="option"]:hover{background:var(--menu-hover)!i
 }
 
 [data-baseweb="toggle"] span{color:#ffffff!important; font-weight:800!important; opacity:1!important;}
-[data-baseweb="toggle"] [role="switch"]{
-  background:var(--toggle-track)!important;
-  border:1px solid rgba(255,255,255,0.22)!important;
-}
-[data-baseweb="toggle"] [role="switch"][aria-checked="true"]{
+
+[data-baseweb="toggle"] [role="switch"],
+[data-baseweb="toggle"] [role="switch"][aria-checked="true"],
+[data-baseweb="toggle"] [role="switch"][aria-checked="false"]{
   background:var(--toggle-red)!important;
-  border:1px solid rgba(255,255,255,0.22)!important;
+  border:1px solid rgba(255,255,255,0.25)!important;
 }
-[data-baseweb="toggle"] [data-baseweb="thumb"]{background:#ffffff!important;}
+
+[data-baseweb="toggle"] [data-baseweb="thumb"]{
+  background:#ffffff!important;
+}
 
 [data-testid="stTooltipContent"]{
   background:#111827!important;
@@ -126,12 +132,12 @@ LIGHT_CSS = """
  --control-border:rgba(0,0,0,0.32);
  --menu-hover:rgba(0,0,0,0.06);
  --btn-bg:#ffffff;
- --btn-hover:#f3f4f6;
+ --btn-hover:#ffffff;
  --btn-border:rgba(0,0,0,0.22);
  --exp-bg:#ffffff;
  --toggle-red:#e11d48;
- --toggle-track:#e5e7eb;
 }
+
 [data-testid="stAppViewContainer"]{background:var(--bg)!important;}
 h1,h2,h3,h4,h5,h6,p,span,label,small{color:#000000!important;opacity:1!important;}
 .metric-hint{color:var(--muted)!important;}
@@ -159,20 +165,34 @@ div[role="option"]:hover, li[role="option"]:hover{background:var(--menu-hover)!i
   border-radius: 14px!important;
   border: 1px solid rgba(0,0,0,0.14)!important;
 }
-[data-baseweb="accordion"] button, [data-baseweb="accordion"] span{
-  color:#000000!important; opacity:1!important; font-weight:650!important;
+[data-baseweb="accordion"] button,
+[data-baseweb="accordion"] span{
+  color:#000000!important;
+  opacity:1!important;
+  font-weight:650!important;
 }
 
 .stButton>button{
-  background:var(--btn-bg)!important;
+  background:#ffffff!important;
   color:#000000!important;
-  border:1px solid var(--btn-border)!important;
+  border:1px solid rgba(0,0,0,0.22)!important;
   border-radius:12px!important;
-  font-weight:700!important;
+  font-weight:800!important;
   padding: 0.62rem 1.15rem!important;
+  box-shadow: none!important;
 }
 .stButton>button *{color:#000000!important; opacity:1!important;}
-.stButton>button:hover{background:var(--btn-hover)!important;}
+.stButton>button:hover{
+  background:#ffffff!important;
+  color:#000000!important;
+  box-shadow: none!important;
+}
+.stButton>button:active{
+  background:#ffffff!important;
+  color:#000000!important;
+  box-shadow: none!important;
+  transform: translateY(0px)!important;
+}
 
 .stButton>button:disabled, .stButton>button[disabled]{
   background:rgba(255,255,255,0.70)!important;
@@ -183,16 +203,18 @@ div[role="option"]:hover, li[role="option"]:hover{background:var(--menu-hover)!i
   opacity:1!important;
 }
 
-[data-baseweb="toggle"] span{color:#000000!important; font-weight:850!important; opacity:1!important;}
-[data-baseweb="toggle"] [role="switch"]{
-  background:var(--toggle-track)!important;
-  border:1px solid rgba(0,0,0,0.18)!important;
-}
-[data-baseweb="toggle"] [role="switch"][aria-checked="true"]{
+[data-baseweb="toggle"] span{color:#000000!important; font-weight:900!important; opacity:1!important;}
+
+[data-baseweb="toggle"] [role="switch"],
+[data-baseweb="toggle"] [role="switch"][aria-checked="true"],
+[data-baseweb="toggle"] [role="switch"][aria-checked="false"]{
   background:var(--toggle-red)!important;
   border:1px solid rgba(0,0,0,0.18)!important;
 }
-[data-baseweb="toggle"] [data-baseweb="thumb"]{background:#ffffff!important;}
+
+[data-baseweb="toggle"] [data-baseweb="thumb"]{
+  background:#ffffff!important;
+}
 
 [data-testid="stTooltipContent"]{
   background:#ffffff!important;
@@ -252,7 +274,7 @@ with top_r:
         "🌙 Dark mode",
         value=(st.session_state["theme_mode"] == "dark"),
         key=f"theme_toggle_{st.session_state['reset_nonce']}",
-        help="Switch the interface between Dark and Light. The switch color stays the same red tone."
+        help="Switch between Dark and Light. The switch track stays the same red tone."
     )
     new_mode = "dark" if is_dark else "light"
     if new_mode != st.session_state["theme_mode"]:
@@ -297,7 +319,7 @@ super_map = {
     "anime": "Other", "disney": "Other", "children": "Other", "comedy": "Other",
 }
 
-genres = sorted(GENRE_FREQ_MAP.keys())
+genres = sorted(GENRE_MAP_PATH and GENRE_FREQ_MAP.keys())
 genre_groups = sorted(set(super_map.get(g, "Other") for g in genres))
 
 st.header("🎛️ Genre Selection")
@@ -393,19 +415,16 @@ with st.expander("🧪 Advanced (optional)", expanded=False):
         key=f"sp_{st.session_state['reset_nonce']}",
         help="Spoken-word content (0–1). Higher values often happen in rap or talk-like vocals."
     )
-
     acousticness = st.slider(
         "🎻 acousticness", 0.0, 1.0, 0.20,
         key=f"ac_{st.session_state['reset_nonce']}",
         help="Acoustic feel (0–1). Higher values usually mean more natural/unplugged instruments."
     )
-
     instrumentalness = st.slider(
         "🎼 instrumentalness", 0.0, 1.0, 0.00,
         key=f"ins_{st.session_state['reset_nonce']}",
         help="Likelihood of no vocals (0–1). Higher means more likely instrumental."
     )
-
     liveness = st.slider(
         "🎤 liveness", 0.0, 1.0, 0.15,
         key=f"liv_{st.session_state['reset_nonce']}",
