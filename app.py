@@ -13,9 +13,7 @@ MODEL_PATH = os.path.join(ART_DIR, "final_model.joblib")
 META_PATH = os.path.join(ART_DIR, "meta.json")
 GENRE_MAP_PATH = os.path.join(ART_DIR, "genre_freq_map.json")
 
-# Put an "icon-only" Spotify logo here (official asset):
-# repo/
-#   assets/spotify_icon.png
+# repo/assets/spotify_icon.png  (icon-only, official asset)
 LOGO_PATH = os.path.join("assets", "spotify_icon.png")
 
 # =========================
@@ -55,8 +53,10 @@ def load_artifacts():
         raise FileNotFoundError(f"Missing genre map: {GENRE_MAP_PATH}")
 
     model = joblib.load(MODEL_PATH)
+
     with open(META_PATH, "r", encoding="utf-8") as f:
         meta = json.load(f)
+
     with open(GENRE_MAP_PATH, "r", encoding="utf-8") as f:
         genre_freq_map = json.load(f)
 
@@ -98,7 +98,7 @@ def do_reset():
 h1, h2 = st.columns([0.08, 0.92], vertical_alignment="center")
 with h1:
     if os.path.exists(LOGO_PATH):
-        st.image(LOGO_PATH, width=72)  # <- bigger logo
+        st.image(LOGO_PATH, width=72)  # bigger logo
     else:
         st.write("🎵")
 with h2:
@@ -242,7 +242,7 @@ with c1:
     )
 
     loudness = st.slider(
-        "🔊 loudness (dB)", -20.0, 0.0, -8.0,  # <- starts at -20 now
+        "🔊 loudness (dB)", -20.0, 0.0, -8.0,
         key=f"loud_{st.session_state['reset_nonce']}",
         help="Average loudness in dB (typical Spotify tracks are between -14 and -5 dB). Closer to 0 means louder."
     )
@@ -358,18 +358,17 @@ X = X[FEATURES].replace([np.inf, -np.inf], np.nan).fillna(0.0)
 st.divider()
 
 # =========================
-# Predict
+# Predict (restore your original messages + logic)
 # =========================
 if st.button("🎯 Predict", key=f"pred_{st.session_state['reset_nonce']}"):
     if hasattr(model, "predict_proba"):
         hit_prob = float(model.predict_proba(X)[:, 1][0])
     else:
-        score = float(model.decision_function(X)[0])
-        hit_prob = 1.0 / (1.0 + np.exp(-score))
+        hit_prob = float(model.decision_function(X)[0])
+
+    non_hit_prob = float(1.0 - hit_prob)
 
     if hit_prob >= TH:
-        st.success(f"✅ HIT  |  P(hit)={hit_prob:.3f}  |  Threshold={TH:.3f}")
+        st.success(f"This song would be a HIT! (Hit probability: {hit_prob:.3f})")
     else:
-        st.warning(f"❌ NOT HIT  |  P(hit)={hit_prob:.3f}  |  Threshold={TH:.3f}")
-
-    st.progress(min(max(hit_prob, 0.0), 1.0))
+        st.warning(f"This song would NOT be a hit. (Non-hit probability: {non_hit_prob:.3f})")
