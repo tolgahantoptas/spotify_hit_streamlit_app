@@ -4,7 +4,6 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import os
-from pathlib import Path
 
 # =========================
 # Paths / Files
@@ -14,10 +13,13 @@ MODEL_PATH = os.path.join(ART_DIR, "final_model.joblib")
 META_PATH = os.path.join(ART_DIR, "meta.json")
 GENRE_MAP_PATH = os.path.join(ART_DIR, "genre_freq_map.json")
 
-LOGO_PATH = os.path.join("assets", "spotify_icon.png")  # <- put your plain Spotify logo here
+# Put an "icon-only" Spotify logo here (official asset):
+# repo/
+#   assets/spotify_icon.png
+LOGO_PATH = os.path.join("assets", "spotify_icon.png")
 
 # =========================
-# Page config (set early)
+# Page config (must be early)
 # =========================
 page_icon = LOGO_PATH if os.path.exists(LOGO_PATH) else "🎵"
 st.set_page_config(page_title="Spotify Hit Predictor", layout="wide", page_icon=page_icon)
@@ -60,7 +62,6 @@ def load_artifacts():
 
     # normalize keys (safety)
     genre_freq_map = {str(k).strip().lower(): float(v) for k, v in genre_freq_map.items()}
-
     return model, meta, genre_freq_map
 
 try:
@@ -97,7 +98,7 @@ def do_reset():
 h1, h2 = st.columns([0.08, 0.92], vertical_alignment="center")
 with h1:
     if os.path.exists(LOGO_PATH):
-        st.image(LOGO_PATH, width=52)
+        st.image(LOGO_PATH, width=72)  # <- bigger logo
     else:
         st.write("🎵")
 with h2:
@@ -113,8 +114,8 @@ with st.sidebar:
         "Keep alive (auto-refresh every 5 min)",
         value=True,
         help=(
-            "If you keep the page open, this auto-refresh helps prevent your session from going idle. "
-            "To keep the app awake even with no visitors, use an external ping (e.g., UptimeRobot every 5 min)."
+            "If you keep the page open, this auto-refresh helps keep your session active. "
+            "To keep the app awake with no visitors on Streamlit Cloud, use an external ping (e.g., UptimeRobot every 5 min)."
         ),
         key=f"keepalive_{st.session_state['reset_nonce']}"
     )
@@ -130,14 +131,15 @@ with st.sidebar:
     )
 
 if keep_alive:
-    # Refresh the browser every 300 seconds when a user keeps the page open.
-    # This helps keep the active session alive, but does NOT replace external pings when there are no visitors.
     st.markdown('<meta http-equiv="refresh" content="300">', unsafe_allow_html=True)
 
 st.button("🔄 Reset", on_click=do_reset, key="reset_btn")
 
 # =========================
-# Super-genre mapping (UI only)
+# Super mapping (UI only)
+# Labels:
+#   Genre  -> broad category
+#   Alt genre -> specific sub-genre
 # =========================
 super_map = {
     "rock": "Rock/Metal", "alt-rock": "Rock/Metal", "alternative": "Rock/Metal",
@@ -174,7 +176,7 @@ super_map = {
 }
 
 genres = sorted(GENRE_FREQ_MAP.keys())
-supergenres = sorted(set(super_map.get(g, "Other") for g in genres))
+genre_groups = sorted(set(super_map.get(g, "Other") for g in genres))
 
 # =========================
 # Genre selection
@@ -183,24 +185,24 @@ st.header("🎛️ Genre Selection")
 g1, g2 = st.columns(2)
 
 with g1:
-    default_super = "Pop" if "Pop" in supergenres else supergenres[0]
+    default_group = "Pop" if "Pop" in genre_groups else genre_groups[0]
     chosen_super = st.selectbox(
-        "🎧 Super genre",
-        supergenres,
-        index=supergenres.index(default_super),
-        key=f"super_{st.session_state['reset_nonce']}",
-        help="A broad category (e.g., Pop, Rock/Metal). This only filters the list of track genres below."
+        "🎧 Genre",
+        genre_groups,
+        index=genre_groups.index(default_group),
+        key=f"genre_group_{st.session_state['reset_nonce']}",
+        help="A broad category. This only filters the list of alt genres below."
     )
 
 with g2:
     sub_list = [g for g in genres if super_map.get(g, "Other") == chosen_super]
     sub_list = sub_list if sub_list else genres
     chosen_genre = st.selectbox(
-        "🏷️ track_genre",
+        "🏷️ Alt genre",
         sub_list,
         index=0,
-        key=f"genre_{st.session_state['reset_nonce']}",
-        help="The track’s genre label used in the dataset. This affects track_genre_freq (how common the genre is in the dataset)."
+        key=f"alt_genre_{st.session_state['reset_nonce']}",
+        help="Specific genre label used by the model mapping."
     )
 
 track_genre_freq = float(GENRE_FREQ_MAP.get(chosen_genre, 0.0))
@@ -213,16 +215,14 @@ c1, c2 = st.columns(2)
 
 with c1:
     duration_sec = st.slider(
-        "⏱️ duration (sec)",
-        30, 900, 180,
+        "⏱️ duration (sec)", 30, 900, 180,
         key=f"duration_{st.session_state['reset_nonce']}",
         help="Track length in seconds."
     )
     st.caption(f"Selected: {duration_sec//60}:{duration_sec%60:02d}")
 
     artist_followers_k = st.slider(
-        "👥 artist_followers (K)",
-        0, 150_000, 100,
+        "👥 artist_followers (K)", 0, 150_000, 100,
         step=100,
         key=f"followers_{st.session_state['reset_nonce']}",
         help="Artist followers in thousands (K)."
@@ -230,51 +230,44 @@ with c1:
     st.caption(f"{artist_followers_k:,}K = {artist_followers_k*1000:,} followers")
 
     danceability = st.slider(
-        "💃 danceability",
-        0.0, 1.0, 0.50,
+        "💃 danceability", 0.0, 1.0, 0.50,
         key=f"dance_{st.session_state['reset_nonce']}",
         help="How suitable the track is for dancing (0–1)."
     )
 
     energy = st.slider(
-        "🔋 energy",
-        0.0, 1.0, 0.50,
+        "🔋 energy", 0.0, 1.0, 0.50,
         key=f"energy_{st.session_state['reset_nonce']}",
         help="Perceived intensity and activity (0–1)."
     )
 
     loudness = st.slider(
-        "🔊 loudness (dB)",
-        -30.0, 0.0, -8.0,
+        "🔊 loudness (dB)", -20.0, 0.0, -8.0,  # <- starts at -20 now
         key=f"loud_{st.session_state['reset_nonce']}",
-        help="Average loudness in dB. Closer to 0 means louder."
+        help="Average loudness in dB (typical Spotify tracks are between -14 and -5 dB). Closer to 0 means louder."
     )
 
 with c2:
     tempo = st.slider(
-        "🥁 tempo (BPM)",
-        40.0, 220.0, 120.0,
+        "🥁 tempo (BPM)", 40.0, 220.0, 120.0,
         key=f"tempo_{st.session_state['reset_nonce']}",
         help="Estimated tempo in beats per minute."
     )
 
     artist_popularity = st.slider(
-        "⭐ artist_popularity",
-        0, 100, 50,
+        "⭐ artist_popularity", 0, 100, 50,
         key=f"apop_{st.session_state['reset_nonce']}",
         help="Spotify popularity score for the artist (0–100)."
     )
 
     valence = st.slider(
-        "😊 valence",
-        0.0, 1.0, 0.50,
+        "😊 valence", 0.0, 1.0, 0.50,
         key=f"val_{st.session_state['reset_nonce']}",
         help="Musical positivity (0–1). Higher is happier."
     )
 
     release_year = st.slider(
-        "📅 release_year",
-        1950, 2025, 2020,
+        "📅 release_year", 1950, 2025, 2020,
         key=f"year_{st.session_state['reset_nonce']}",
         help="Release year of the track."
     )
@@ -286,14 +279,12 @@ with st.expander("🧪 Advanced (optional)", expanded=False):
     use_exact_duration = st.checkbox(
         "✍️ Enter exact duration (seconds)",
         value=False,
-        key=f"exdur_{st.session_state['reset_nonce']}",
-        help="Type an exact duration value instead of slider."
+        key=f"exdur_{st.session_state['reset_nonce']}"
     )
     use_exact_followers = st.checkbox(
         "✍️ Enter exact followers",
         value=False,
-        key=f"exfol_{st.session_state['reset_nonce']}",
-        help="Type an exact follower count instead of slider."
+        key=f"exfol_{st.session_state['reset_nonce']}"
     )
 
     if use_exact_duration:
@@ -302,8 +293,7 @@ with st.expander("🧪 Advanced (optional)", expanded=False):
                 "⏱️ Exact duration (seconds)",
                 min_value=1, max_value=36000,
                 value=int(duration_sec), step=1,
-                key=f"dur_in_{st.session_state['reset_nonce']}",
-                help="Exact track length in seconds."
+                key=f"dur_in_{st.session_state['reset_nonce']}"
             )
         )
 
@@ -314,41 +304,28 @@ with st.expander("🧪 Advanced (optional)", expanded=False):
                 min_value=0, max_value=2_000_000_000,
                 value=int(artist_followers_k * 1000),
                 step=1000,
-                key=f"fol_in_{st.session_state['reset_nonce']}",
-                help="Exact follower count (not in K)."
+                key=f"fol_in_{st.session_state['reset_nonce']}"
             )
         )
         artist_followers_k = followers_exact // 1000
 
     speechiness = st.slider(
-        "🗣️ speechiness",
-        0.0, 1.0, 0.05,
-        key=f"sp_{st.session_state['reset_nonce']}",
-        help="Presence of spoken words (0–1)."
+        "🗣️ speechiness", 0.0, 1.0, 0.05,
+        key=f"sp_{st.session_state['reset_nonce']}"
     )
-
     acousticness = st.slider(
-        "🎻 acousticness",
-        0.0, 1.0, 0.20,
-        key=f"ac_{st.session_state['reset_nonce']}",
-        help="Confidence measure of whether the track is acoustic (0–1)."
+        "🎻 acousticness", 0.0, 1.0, 0.20,
+        key=f"ac_{st.session_state['reset_nonce']}"
     )
-
     instrumentalness = st.slider(
-        "🎼 instrumentalness",
-        0.0, 1.0, 0.00,
-        key=f"ins_{st.session_state['reset_nonce']}",
-        help="Predicts whether a track contains no vocals (0–1)."
+        "🎼 instrumentalness", 0.0, 1.0, 0.00,
+        key=f"ins_{st.session_state['reset_nonce']}"
     )
-
     liveness = st.slider(
-        "🎤 liveness",
-        0.0, 1.0, 0.15,
-        key=f"liv_{st.session_state['reset_nonce']}",
-        help="Detects presence of an audience (0–1)."
+        "🎤 liveness", 0.0, 1.0, 0.15,
+        key=f"liv_{st.session_state['reset_nonce']}"
     )
 
-# Defaults if expander never opened
 if "speechiness" not in locals():
     speechiness, acousticness, instrumentalness, liveness = 0.05, 0.20, 0.00, 0.15
 
@@ -373,8 +350,6 @@ row = {
 }
 
 X = pd.DataFrame([row])
-
-# Ensure column order + fill missing
 for c in FEATURES:
     if c not in X.columns:
         X[c] = 0.0
@@ -389,13 +364,12 @@ if st.button("🎯 Predict", key=f"pred_{st.session_state['reset_nonce']}"):
     if hasattr(model, "predict_proba"):
         hit_prob = float(model.predict_proba(X)[:, 1][0])
     else:
-        # fallback (rare)
         score = float(model.decision_function(X)[0])
         hit_prob = 1.0 / (1.0 + np.exp(-score))
 
     if hit_prob >= TH:
-        st.success(f"✅ This song would be a HIT!  (Hit probability: {hit_prob:.3f} | Threshold: {TH:.3f})")
+        st.success(f"✅ HIT  |  P(hit)={hit_prob:.3f}  |  Threshold={TH:.3f}")
     else:
-        st.warning(f"❌ This song would NOT be a hit.  (Hit probability: {hit_prob:.3f} | Threshold: {TH:.3f})")
+        st.warning(f"❌ NOT HIT  |  P(hit)={hit_prob:.3f}  |  Threshold={TH:.3f}")
 
     st.progress(min(max(hit_prob, 0.0), 1.0))
