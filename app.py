@@ -41,22 +41,17 @@ DARK_CSS = """
  --menu-hover:rgba(0,0,0,0.06);
  --btn-bg:#1b2330;
  --btn-hover:#263244;
+ --btn-border:rgba(255,255,255,0.18);
  --exp-bg:#141a24;
+ --toggle-red:#e11d48;
+ --toggle-track:#334155;
 }
 [data-testid="stAppViewContainer"]{background:var(--bg)!important;}
 h1,h2,h3,h4,h5,h6,p,span,label,small{color:#ffffff!important;opacity:1!important;}
 .metric-hint{color:var(--muted)!important;}
 
-div[data-baseweb="select"]>div{
-  background:var(--control-bg)!important;
-  border-color:var(--control-border)!important;
-}
-div[data-baseweb="select"] *{
-  color:#ffffff!important;
-  fill:#ffffff!important;
-  opacity:1!important;
-  -webkit-text-fill-color:#ffffff!important;
-}
+div[data-baseweb="select"]>div{background:var(--control-bg)!important;border-color:var(--control-border)!important;}
+div[data-baseweb="select"] *{color:#ffffff!important;fill:#ffffff!important;opacity:1!important;-webkit-text-fill-color:#ffffff!important;}
 div[data-baseweb="select"] input{opacity:1!important;}
 
 div[role="listbox"], ul[role="listbox"], [data-baseweb="popover"], [data-baseweb="menu"]{
@@ -71,26 +66,21 @@ div[role="option"] *, li[role="option"] *,
   background:#ffffff!important;
 }
 div[role="option"][aria-selected="true"], li[role="option"][aria-selected="true"],
-div[role="option"]:hover, li[role="option"]:hover{
-  background:var(--menu-hover)!important;
-}
+div[role="option"]:hover, li[role="option"]:hover{background:var(--menu-hover)!important;}
 
 [data-baseweb="accordion"] > div{
   background:var(--exp-bg)!important;
   border-radius: 14px!important;
   border: 1px solid rgba(255,255,255,0.18)!important;
 }
-[data-baseweb="accordion"] button,
-[data-baseweb="accordion"] span{
-  color:#ffffff!important;
-  opacity:1!important;
-  font-weight:650!important;
+[data-baseweb="accordion"] button, [data-baseweb="accordion"] span{
+  color:#ffffff!important; opacity:1!important; font-weight:650!important;
 }
 
 .stButton>button{
   background:var(--btn-bg)!important;
   color:#ffffff!important;
-  border:1px solid rgba(255,255,255,0.18)!important;
+  border:1px solid var(--btn-border)!important;
   border-radius:12px!important;
   font-weight:700!important;
   padding: 0.62rem 1.15rem!important;
@@ -109,10 +99,13 @@ div[role="option"]:hover, li[role="option"]:hover{
 
 [data-baseweb="toggle"] span{color:#ffffff!important; font-weight:800!important; opacity:1!important;}
 [data-baseweb="toggle"] [role="switch"]{
-  background:#334155!important;
+  background:var(--toggle-track)!important;
   border:1px solid rgba(255,255,255,0.22)!important;
 }
-[data-baseweb="toggle"] [role="switch"][aria-checked="true"]{background:#1db954!important;}
+[data-baseweb="toggle"] [role="switch"][aria-checked="true"]{
+  background:var(--toggle-red)!important;
+  border:1px solid rgba(255,255,255,0.22)!important;
+}
 [data-baseweb="toggle"] [data-baseweb="thumb"]{background:#ffffff!important;}
 
 [data-testid="stTooltipContent"]{
@@ -132,24 +125,19 @@ LIGHT_CSS = """
  --control-bg:#ffffff;
  --control-border:rgba(0,0,0,0.32);
  --menu-hover:rgba(0,0,0,0.06);
- --btn-bg:#f3f4f6;
- --btn-hover:#e5e7eb;
+ --btn-bg:#ffffff;
+ --btn-hover:#f3f4f6;
+ --btn-border:rgba(0,0,0,0.22);
  --exp-bg:#ffffff;
+ --toggle-red:#e11d48;
+ --toggle-track:#e5e7eb;
 }
 [data-testid="stAppViewContainer"]{background:var(--bg)!important;}
 h1,h2,h3,h4,h5,h6,p,span,label,small{color:#000000!important;opacity:1!important;}
 .metric-hint{color:var(--muted)!important;}
 
-div[data-baseweb="select"]>div{
-  background:var(--control-bg)!important;
-  border-color:var(--control-border)!important;
-}
-div[data-baseweb="select"] *{
-  color:#000000!important;
-  fill:#000000!important;
-  opacity:1!important;
-  -webkit-text-fill-color:#000000!important;
-}
+div[data-baseweb="select"]>div{background:var(--control-bg)!important;border-color:var(--control-border)!important;}
+div[data-baseweb="select"] *{color:#000000!important;fill:#000000!important;opacity:1!important;-webkit-text-fill-color:#000000!important;}
 div[data-baseweb="select"] input{opacity:1!important;}
 
 div[role="listbox"], ul[role="listbox"], [data-baseweb="popover"], [data-baseweb="menu"]{
@@ -164,26 +152,21 @@ div[role="option"] *, li[role="option"] *,
   background:#ffffff!important;
 }
 div[role="option"][aria-selected="true"], li[role="option"][aria-selected="true"],
-div[role="option"]:hover, li[role="option"]:hover{
-  background:var(--menu-hover)!important;
-}
+div[role="option"]:hover, li[role="option"]:hover{background:var(--menu-hover)!important;}
 
 [data-baseweb="accordion"] > div{
   background:var(--exp-bg)!important;
   border-radius: 14px!important;
   border: 1px solid rgba(0,0,0,0.14)!important;
 }
-[data-baseweb="accordion"] button,
-[data-baseweb="accordion"] span{
-  color:#000000!important;
-  opacity:1!important;
-  font-weight:650!important;
+[data-baseweb="accordion"] button, [data-baseweb="accordion"] span{
+  color:#000000!important; opacity:1!important; font-weight:650!important;
 }
 
 .stButton>button{
   background:var(--btn-bg)!important;
   color:#000000!important;
-  border:1px solid rgba(0,0,0,0.16)!important;
+  border:1px solid var(--btn-border)!important;
   border-radius:12px!important;
   font-weight:700!important;
   padding: 0.62rem 1.15rem!important;
@@ -192,21 +175,24 @@ div[role="option"]:hover, li[role="option"]:hover{
 .stButton>button:hover{background:var(--btn-hover)!important;}
 
 .stButton>button:disabled, .stButton>button[disabled]{
-  background:rgba(243,244,246,0.75)!important;
-  color:rgba(0,0,0,0.70)!important;
+  background:rgba(255,255,255,0.70)!important;
+  color:rgba(0,0,0,0.55)!important;
 }
 .stButton>button:disabled *,.stButton>button[disabled] *{
-  color:rgba(0,0,0,0.70)!important;
+  color:rgba(0,0,0,0.55)!important;
   opacity:1!important;
 }
 
 [data-baseweb="toggle"] span{color:#000000!important; font-weight:850!important; opacity:1!important;}
 [data-baseweb="toggle"] [role="switch"]{
-  background:#e5e7eb!important;
+  background:var(--toggle-track)!important;
   border:1px solid rgba(0,0,0,0.18)!important;
 }
-[data-baseweb="toggle"] [role="switch"][aria-checked="true"]{background:#1db954!important;}
-[data-baseweb="toggle"] [data-baseweb="thumb"]{background:#111111!important;}
+[data-baseweb="toggle"] [role="switch"][aria-checked="true"]{
+  background:var(--toggle-red)!important;
+  border:1px solid rgba(0,0,0,0.18)!important;
+}
+[data-baseweb="toggle"] [data-baseweb="thumb"]{background:#ffffff!important;}
 
 [data-testid="stTooltipContent"]{
   background:#ffffff!important;
@@ -266,7 +252,7 @@ with top_r:
         "🌙 Dark mode",
         value=(st.session_state["theme_mode"] == "dark"),
         key=f"theme_toggle_{st.session_state['reset_nonce']}",
-        help="Switch the interface between Dark and Light. Dark is easier on the eyes at night; Light is better in bright environments."
+        help="Switch the interface between Dark and Light. The switch color stays the same red tone."
     )
     new_mode = "dark" if is_dark else "light"
     if new_mode != st.session_state["theme_mode"]:
