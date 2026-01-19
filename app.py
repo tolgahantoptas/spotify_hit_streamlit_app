@@ -17,165 +17,213 @@ st.set_page_config(page_title="Spotify Hit Predictor", layout="wide", page_icon=
 if "theme_mode" not in st.session_state:
     st.session_state["theme_mode"] = "dark"
 
-st.markdown(
-    """
-    <style>
-      .block-container {padding-top: 2.4rem; padding-bottom: 2.5rem;}
-      h1 {margin-bottom: 0.2rem;}
-      h2 {margin-top: 1.2rem;}
-      .stButton>button {border-radius: 10px; padding: 0.55rem 1.1rem;}
-      .stExpander {border-radius: 14px;}
-      [data-baseweb="slider"] {padding-top: 0.35rem;}
-      .metric-hint {font-size: 0.95rem; margin-top: -0.25rem;}
-      @media (max-width: 768px){
-        .block-container {padding-top: 3.0rem;}
-        [data-testid="stImage"] img {margin-top: 10px;}
-      }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+COMMON_CSS = """
+<style>
+  .block-container {padding-top: 2.4rem; padding-bottom: 2.5rem;}
+  h1 {margin-bottom: 0.2rem;}
+  h2 {margin-top: 1.2rem;}
+  .stExpander {border-radius: 14px;}
+  [data-baseweb="slider"] {padding-top: 0.35rem;}
+  .metric-hint {font-size: 0.95rem; margin-top: -0.25rem;}
+  @media (max-width: 768px){
+    .block-container {padding-top: 3.0rem;}
+    [data-testid="stImage"] img {margin-top: 10px;}
+  }
+</style>
+"""
 
-if st.session_state["theme_mode"] == "dark":
-    st.markdown(
-        """
-        <style>
-          :root{
-            --bg:#0e1117;
-            --txt:#ffffff;
-            --muted:rgba(255,255,255,0.78);
-            --control-bg:#1a1f2a;
-            --control-border:rgba(255,255,255,0.14);
-            --control-txt:#ffffff;
-            --menu-bg:#1a1f2a;
-            --menu-txt:#ffffff;
-            --menu-hover:rgba(255,255,255,0.10);
-          }
+DARK_CSS = """
+<style>
+  :root{
+    --bg:#0e1117;
+    --txt:#ffffff;
+    --muted:rgba(255,255,255,0.80);
 
-          [data-testid="stAppViewContainer"] { background: var(--bg) !important; }
+    --control-bg:#1a1f2a;
+    --control-border:rgba(255,255,255,0.16);
+    --control-txt:#ffffff;
 
-          h1,h2,h3,h4,h5,h6 { color: var(--txt) !important; }
-          [data-testid="stMarkdownContainer"] p,
-          [data-testid="stMarkdownContainer"] span,
-          [data-testid="stMarkdownContainer"] li,
-          [data-testid="stCaptionContainer"],
-          .stCaption,
-          label, small { color: var(--txt) !important; }
+    --menu-bg:#1a1f2a;
+    --menu-txt:#ffffff;
+    --menu-hover:rgba(255,255,255,0.12);
 
-          .metric-hint { color: var(--muted) !important; }
+    --btn-bg:#1b2330;
+    --btn-border:rgba(255,255,255,0.18);
+    --btn-txt:#ffffff;
+    --btn-hover:#263244;
+  }
 
-          div[data-baseweb="select"] > div{
-            background: var(--control-bg) !important;
-            border-color: var(--control-border) !important;
-          }
-          div[data-baseweb="select"] span{
-            color: var(--control-txt) !important;
-          }
+  [data-testid="stAppViewContainer"] { background: var(--bg) !important; }
 
-          div[role="listbox"],
-          ul[role="listbox"]{
-            background: var(--menu-bg) !important;
-            color: var(--menu-txt) !important;
-            border: 1px solid var(--control-border) !important;
-          }
+  h1,h2,h3,h4,h5,h6,
+  [data-testid="stMarkdownContainer"] p,
+  [data-testid="stMarkdownContainer"] span,
+  [data-testid="stMarkdownContainer"] li,
+  [data-testid="stCaptionContainer"],
+  .stCaption,
+  label, small { color: var(--txt) !important; }
 
-          div[role="option"],
-          li[role="option"]{
-            background: var(--menu-bg) !important;
-            color: var(--menu-txt) !important;
-          }
+  .metric-hint { color: var(--muted) !important; }
 
-          div[role="option"][aria-selected="true"],
-          li[role="option"][aria-selected="true"]{
-            background: var(--menu-hover) !important;
-          }
+  div[data-baseweb="select"] > div{
+    background: var(--control-bg) !important;
+    border-color: var(--control-border) !important;
+  }
+  div[data-baseweb="select"] span{
+    color: var(--control-txt) !important;
+  }
 
-          div[role="option"]:hover,
-          li[role="option"]:hover{
-            background: var(--menu-hover) !important;
-          }
+  div[role="listbox"],
+  ul[role="listbox"]{
+    background: var(--menu-bg) !important;
+    color: var(--menu-txt) !important;
+    border: 1px solid var(--control-border) !important;
+  }
 
-          [data-baseweb="popover"] * { color: var(--menu-txt) !important; }
+  div[role="option"],
+  li[role="option"]{
+    background: var(--menu-bg) !important;
+    color: var(--menu-txt) !important;
+  }
 
-          [data-testid="stTooltipContent"]{
-            background: #111827 !important;
-            color: #ffffff !important;
-            border: 1px solid rgba(255,255,255,0.12) !important;
-          }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-else:
-    st.markdown(
-        """
-        <style>
-          :root{
-            --bg:#ffffff;
-            --txt:#000000;
-            --muted:rgba(0,0,0,0.72);
-            --control-bg:#ffffff;
-            --control-border:rgba(0,0,0,0.22);
-            --control-txt:#000000;
-            --menu-bg:#ffffff;
-            --menu-txt:#000000;
-            --menu-hover:rgba(0,0,0,0.06);
-          }
+  div[role="option"][aria-selected="true"],
+  li[role="option"][aria-selected="true"]{
+    background: var(--menu-hover) !important;
+  }
 
-          [data-testid="stAppViewContainer"] { background: var(--bg) !important; }
+  div[role="option"]:hover,
+  li[role="option"]:hover{
+    background: var(--menu-hover) !important;
+  }
 
-          h1,h2,h3,h4,h5,h6 { color: var(--txt) !important; }
-          [data-testid="stMarkdownContainer"] p,
-          [data-testid="stMarkdownContainer"] span,
-          [data-testid="stMarkdownContainer"] li,
-          [data-testid="stCaptionContainer"],
-          .stCaption,
-          label, small { color: var(--txt) !important; }
+  [data-testid="stTooltipContent"]{
+    background: #111827 !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255,255,255,0.14) !important;
+  }
 
-          .metric-hint { color: var(--muted) !important; }
+  .stButton>button{
+    background: var(--btn-bg) !important;
+    color: var(--btn-txt) !important;
+    border: 1px solid var(--btn-border) !important;
+    border-radius: 10px !important;
+    padding: 0.55rem 1.1rem !important;
+  }
+  .stButton>button *{ color: var(--btn-txt) !important; }
+  .stButton>button:hover{
+    background: var(--btn-hover) !important;
+    border-color: rgba(255,255,255,0.28) !important;
+  }
+  .stButton>button:active{
+    background: var(--btn-hover) !important;
+  }
 
-          div[data-baseweb="select"] > div{
-            background: var(--control-bg) !important;
-            border-color: var(--control-border) !important;
-          }
-          div[data-baseweb="select"] span{
-            color: var(--control-txt) !important;
-          }
+  [data-baseweb="checkbox"] * { color: var(--txt) !important; }
+  [data-baseweb="radio"] * { color: var(--txt) !important; }
+  [data-baseweb="toggle"] * { color: var(--txt) !important; }
 
-          div[role="listbox"],
-          ul[role="listbox"]{
-            background: var(--menu-bg) !important;
-            color: var(--menu-txt) !important;
-            border: 1px solid var(--control-border) !important;
-          }
+  [data-baseweb="input"] input{
+    color: var(--txt) !important;
+    background: var(--control-bg) !important;
+    border-color: var(--control-border) !important;
+  }
+</style>
+"""
 
-          div[role="option"],
-          li[role="option"]{
-            background: var(--menu-bg) !important;
-            color: var(--menu-txt) !important;
-          }
+LIGHT_CSS = """
+<style>
+  :root{
+    --bg:#ffffff;
+    --txt:#000000;
+    --muted:rgba(0,0,0,0.75);
 
-          div[role="option"][aria-selected="true"],
-          li[role="option"][aria-selected="true"]{
-            background: var(--menu-hover) !important;
-          }
+    --control-bg:#ffffff;
+    --control-border:rgba(0,0,0,0.20);
+    --control-txt:#000000;
 
-          div[role="option"]:hover,
-          li[role="option"]:hover{
-            background: var(--menu-hover) !important;
-          }
+    --menu-bg:#ffffff;
+    --menu-txt:#000000;
+    --menu-hover:rgba(0,0,0,0.06);
 
-          [data-baseweb="popover"] * { color: var(--menu-txt) !important; }
+    --btn-bg:#f3f4f6;
+    --btn-border:rgba(0,0,0,0.18);
+    --btn-txt:#000000;
+    --btn-hover:#e5e7eb;
+  }
 
-          [data-testid="stTooltipContent"]{
-            background: #ffffff !important;
-            color: #000000 !important;
-            border: 1px solid rgba(0,0,0,0.15) !important;
-          }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+  [data-testid="stAppViewContainer"] { background: var(--bg) !important; }
+
+  h1,h2,h3,h4,h5,h6,
+  [data-testid="stMarkdownContainer"] p,
+  [data-testid="stMarkdownContainer"] span,
+  [data-testid="stMarkdownContainer"] li,
+  [data-testid="stCaptionContainer"],
+  .stCaption,
+  label, small { color: var(--txt) !important; }
+
+  .metric-hint { color: var(--muted) !important; }
+
+  div[data-baseweb="select"] > div{
+    background: var(--control-bg) !important;
+    border-color: var(--control-border) !important;
+  }
+  div[data-baseweb="select"] span{
+    color: var(--control-txt) !important;
+  }
+
+  div[role="listbox"],
+  ul[role="listbox"]{
+    background: var(--menu-bg) !important;
+    color: var(--menu-txt) !important;
+    border: 1px solid var(--control-border) !important;
+  }
+
+  div[role="option"],
+  li[role="option"]{
+    background: var(--menu-bg) !important;
+    color: var(--menu-txt) !important;
+  }
+
+  div[role="option"][aria-selected="true"],
+  li[role="option"][aria-selected="true"]{
+    background: var(--menu-hover) !important;
+  }
+
+  div[role="option"]:hover,
+  li[role="option"]:hover{
+    background: var(--menu-hover) !important;
+  }
+
+  [data-testid="stTooltipContent"]{
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid rgba(0,0,0,0.15) !important;
+  }
+
+  .stButton>button{
+    background: var(--btn-bg) !important;
+    color: var(--btn-txt) !important;
+    border: 1px solid var(--btn-border) !important;
+    border-radius: 10px !important;
+    padding: 0.55rem 1.1rem !important;
+  }
+  .stButton>button *{ color: var(--btn-txt) !important; }
+  .stButton>button:hover{
+    background: var(--btn-hover) !important;
+    border-color: rgba(0,0,0,0.28) !important;
+  }
+  .stButton>button:active{
+    background: var(--btn-hover) !important;
+  }
+
+  [data-baseweb="checkbox"] * { color: var(--txt) !important; }
+  [data-baseweb="radio"] * { color: var(--txt) !important; }
+  [data-baseweb="toggle"] * { color: var(--txt) !important; }
+</style>
+"""
+
+st.markdown(COMMON_CSS, unsafe_allow_html=True)
+st.markdown(DARK_CSS if st.session_state["theme_mode"] == "dark" else LIGHT_CSS, unsafe_allow_html=True)
 
 @st.cache_resource
 def load_artifacts():
