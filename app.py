@@ -44,11 +44,9 @@ if st.session_state["theme_mode"] == "dark":
             --bg:#0e1117;
             --txt:#ffffff;
             --muted:rgba(255,255,255,0.78);
-
             --control-bg:#1a1f2a;
             --control-border:rgba(255,255,255,0.14);
             --control-txt:#ffffff;
-
             --menu-bg:#1a1f2a;
             --menu-txt:#ffffff;
             --menu-hover:rgba(255,255,255,0.10);
@@ -74,19 +72,26 @@ if st.session_state["theme_mode"] == "dark":
             color: var(--control-txt) !important;
           }
 
-          div[role="listbox"]{
+          div[role="listbox"],
+          ul[role="listbox"]{
             background: var(--menu-bg) !important;
             color: var(--menu-txt) !important;
             border: 1px solid var(--control-border) !important;
           }
-          div[role="option"]{
+
+          div[role="option"],
+          li[role="option"]{
             background: var(--menu-bg) !important;
             color: var(--menu-txt) !important;
           }
-          div[role="option"][aria-selected="true"]{
+
+          div[role="option"][aria-selected="true"],
+          li[role="option"][aria-selected="true"]{
             background: var(--menu-hover) !important;
           }
-          div[role="option"]:hover{
+
+          div[role="option"]:hover,
+          li[role="option"]:hover{
             background: var(--menu-hover) !important;
           }
 
@@ -109,11 +114,9 @@ else:
             --bg:#ffffff;
             --txt:#000000;
             --muted:rgba(0,0,0,0.72);
-
             --control-bg:#ffffff;
-            --control-border:rgba(0,0,0,0.18);
+            --control-border:rgba(0,0,0,0.22);
             --control-txt:#000000;
-
             --menu-bg:#ffffff;
             --menu-txt:#000000;
             --menu-hover:rgba(0,0,0,0.06);
@@ -139,19 +142,26 @@ else:
             color: var(--control-txt) !important;
           }
 
-          div[role="listbox"]{
+          div[role="listbox"],
+          ul[role="listbox"]{
             background: var(--menu-bg) !important;
             color: var(--menu-txt) !important;
             border: 1px solid var(--control-border) !important;
           }
-          div[role="option"]{
+
+          div[role="option"],
+          li[role="option"]{
             background: var(--menu-bg) !important;
             color: var(--menu-txt) !important;
           }
-          div[role="option"][aria-selected="true"]{
+
+          div[role="option"][aria-selected="true"],
+          li[role="option"][aria-selected="true"]{
             background: var(--menu-hover) !important;
           }
-          div[role="option"]:hover{
+
+          div[role="option"]:hover,
+          li[role="option"]:hover{
             background: var(--menu-hover) !important;
           }
 
