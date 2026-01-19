@@ -21,7 +21,6 @@ COMMON_CSS = """
 <style>
 .block-container {padding-top: 2.6rem; padding-bottom: 2.5rem;}
 h1 {margin-bottom: 0.2rem;}
-h2 {margin-top: 1.2rem;}
 .metric-hint {font-size: 0.95rem; margin-top: -0.25rem;}
 [data-baseweb="slider"] {padding-top: 0.35rem;}
 @media (max-width: 768px){
@@ -40,12 +39,15 @@ DARK_CSS = """
  --btn-bg:#1b2330; --btn-hover:#263244;
 }
 [data-testid="stAppViewContainer"]{background:var(--bg)!important;}
-h1,h2,h3,h4,h5,h6,p,span,label,small{color:var(--txt)!important;opacity:1!important;}
+h1,h2,h3,h4,h5,h6,p,span,label,small{color:#ffffff!important;opacity:1!important;}
 .metric-hint{color:var(--muted)!important;}
 div[data-baseweb="select"]>div{background:var(--control-bg)!important;border-color:var(--control-border)!important;}
-div[data-baseweb="select"] span,div[data-baseweb="select"] input,div[data-baseweb="select"] svg{color:#ffffff!important;fill:#ffffff!important;}
+div[data-baseweb="select"] span,
+div[data-baseweb="select"] input,
+div[data-baseweb="select"] svg{color:#ffffff!important;fill:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
 div[role="listbox"],ul[role="listbox"]{background:var(--menu-bg)!important;border:1px solid var(--control-border)!important;}
-div[role="option"],li[role="option"]{color:#ffffff!important;background:var(--menu-bg)!important;}
+div[role="option"],li[role="option"],
+div[role="option"] *,li[role="option"] *{color:#ffffff!important;background:var(--menu-bg)!important;}
 div[role="option"][aria-selected="true"],li[role="option"][aria-selected="true"],
 div[role="option"]:hover,li[role="option"]:hover{background:var(--menu-hover)!important;}
 .stButton>button{background:var(--btn-bg)!important;color:#ffffff!important;border-radius:10px!important;font-weight:650!important;}
@@ -64,12 +66,21 @@ LIGHT_CSS = """
  --btn-bg:#f3f4f6; --btn-hover:#e5e7eb;
 }
 [data-testid="stAppViewContainer"]{background:var(--bg)!important;}
-h1,h2,h3,h4,h5,h6,p,span,label,small{color:var(--txt)!important;opacity:1!important;}
+h1,h2,h3,h4,h5,h6,p,span,label,small{color:#000000!important;opacity:1!important;}
 .metric-hint{color:var(--muted)!important;}
 div[data-baseweb="select"]>div{background:var(--control-bg)!important;border-color:var(--control-border)!important;}
-div[data-baseweb="select"] span,div[data-baseweb="select"] input,div[data-baseweb="select"] svg{color:#000000!important;fill:#000000!important;}
-div[role="listbox"],ul[role="listbox"]{background:var(--menu-bg)!important;border:1px solid var(--control-border)!important;}
-div[role="option"],li[role="option"]{color:#000000!important;background:var(--menu-bg)!important;}
+div[data-baseweb="select"] span,
+div[data-baseweb="select"] input,
+div[data-baseweb="select"] svg{color:#000000!important;fill:#000000!important;-webkit-text-fill-color:#000000!important;}
+div[role="listbox"],ul[role="listbox"],
+[data-baseweb="popover"],[data-baseweb="menu"]{
+ background:#ffffff!important;border:1px solid var(--control-border)!important;
+}
+div[role="option"],li[role="option"],
+div[role="option"] *,li[role="option"] *,
+[data-baseweb="popover"] *,[data-baseweb="menu"] *{
+ color:#000000!important;opacity:1!important;background:#ffffff!important;
+}
 div[role="option"][aria-selected="true"],li[role="option"][aria-selected="true"],
 div[role="option"]:hover,li[role="option"]:hover{background:var(--menu-hover)!important;}
 .stButton>button{background:var(--btn-bg)!important;color:#000000!important;border-radius:10px!important;font-weight:650!important;}
@@ -100,7 +111,8 @@ if "reset_nonce" not in st.session_state:
 def do_reset():
     keep={"reset_nonce","theme_mode"}
     for k in list(st.session_state.keys()):
-        if k not in keep: del st.session_state[k]
+        if k not in keep:
+            del st.session_state[k]
     st.session_state["reset_nonce"]+=1
 
 top_l, top_r = st.columns([0.72,0.28])
@@ -114,7 +126,8 @@ with top_r:
 with top_l:
     c1,c2=st.columns([0.1,0.9])
     with c1:
-        if os.path.exists(LOGO_PATH): st.image(LOGO_PATH,width=72)
+        if os.path.exists(LOGO_PATH):
+            st.image(LOGO_PATH,width=72)
     with c2:
         st.title("Spotify Hit Predictor")
         st.caption("Choose a genre, set the audio and artist features, then click Predict.")
@@ -168,10 +181,16 @@ with st.expander("🧪 Advanced (optional)"):
 
 row={
 "duration_ms":duration_sec*1000,
-"danceability":danceability,"energy":energy,"loudness":loudness,
-"speechiness":speechiness,"acousticness":acousticness,
-"instrumentalness":instrumentalness,"liveness":liveness,
-"valence":valence,"tempo":tempo,"release_year":release_year,
+"danceability":danceability,
+"energy":energy,
+"loudness":loudness,
+"speechiness":speechiness,
+"acousticness":acousticness,
+"instrumentalness":instrumentalness,
+"liveness":liveness,
+"valence":valence,
+"tempo":tempo,
+"release_year":release_year,
 "artist_followers":artist_followers_k*1000,
 "artist_popularity":artist_popularity,
 "track_genre_freq":track_genre_freq
@@ -179,7 +198,8 @@ row={
 
 X=pd.DataFrame([row])
 for c in FEATURES:
-    if c not in X: X[c]=0.0
+    if c not in X:
+        X[c]=0.0
 X=X[FEATURES].fillna(0.0)
 
 st.divider()
