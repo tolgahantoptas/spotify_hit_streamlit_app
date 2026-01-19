@@ -71,7 +71,8 @@ with st.sidebar:
     keep_alive = st.checkbox(
         "Keep alive (auto-refresh every 5 min)",
         value=True,
-        key=f"keepalive_{st.session_state['reset_nonce']}"
+        key=f"keepalive_{st.session_state['reset_nonce']}",
+        help="Keeps the session active while the page is open. For Streamlit Cloud, external pings are still recommended."
     )
     st.markdown(
         """
@@ -127,7 +128,8 @@ with g1:
         "🎧 Genre",
         genre_groups,
         index=genre_groups.index(default_group),
-        key=f"genre_group_{st.session_state['reset_nonce']}"
+        key=f"genre_group_{st.session_state['reset_nonce']}",
+        help="A broad genre category used only to filter the list of sub-genres."
     )
 
 with g2:
@@ -136,7 +138,8 @@ with g2:
         "🏷️ Alt genre",
         sub_list if sub_list else genres,
         index=0,
-        key=f"alt_genre_{st.session_state['reset_nonce']}"
+        key=f"alt_genre_{st.session_state['reset_nonce']}",
+        help="Specific genre label used by the model. This determines track_genre_freq."
     )
 
 track_genre_freq = float(GENRE_FREQ_MAP.get(chosen_genre, 0.0))
@@ -145,23 +148,82 @@ st.header("📌 Basic Features")
 c1, c2 = st.columns(2)
 
 with c1:
-    duration_sec = st.slider("⏱️ duration (sec)", 30, 900, 180, key=f"duration_{st.session_state['reset_nonce']}")
-    artist_followers_k = st.slider("👥 artist_followers (K)", 0, 150_000, 100, step=100, key=f"followers_{st.session_state['reset_nonce']}")
-    danceability = st.slider("💃 danceability", 0.0, 1.0, 0.50, key=f"dance_{st.session_state['reset_nonce']}")
-    energy = st.slider("🔋 energy", 0.0, 1.0, 0.50, key=f"energy_{st.session_state['reset_nonce']}")
-    loudness = st.slider("🔊 loudness (dB)", -20.0, 0.0, -8.0, key=f"loud_{st.session_state['reset_nonce']}")
+    duration_sec = st.slider(
+        "⏱️ duration (sec)", 30, 900, 180,
+        key=f"duration_{st.session_state['reset_nonce']}",
+        help="Track length in seconds."
+    )
+
+    artist_followers_k = st.slider(
+        "👥 artist_followers (K)", 0, 150_000, 100, step=100,
+        key=f"followers_{st.session_state['reset_nonce']}",
+        help="Approximate artist follower count in thousands (K)."
+    )
+
+    danceability = st.slider(
+        "💃 danceability", 0.0, 1.0, 0.50,
+        key=f"dance_{st.session_state['reset_nonce']}",
+        help="How suitable the track is for dancing (0–1)."
+    )
+
+    energy = st.slider(
+        "🔋 energy", 0.0, 1.0, 0.50,
+        key=f"energy_{st.session_state['reset_nonce']}",
+        help="Perceived intensity and activity of the track (0–1)."
+    )
+
+    loudness = st.slider(
+        "🔊 loudness (dB)", -20.0, 0.0, -8.0,
+        key=f"loud_{st.session_state['reset_nonce']}",
+        help="Average loudness in dB. Typical Spotify tracks are between -14 and -5 dB."
+    )
 
 with c2:
-    tempo = st.slider("🥁 tempo (BPM)", 40.0, 220.0, 120.0, key=f"tempo_{st.session_state['reset_nonce']}")
-    artist_popularity = st.slider("⭐ artist_popularity", 0, 100, 50, key=f"apop_{st.session_state['reset_nonce']}")
-    valence = st.slider("😊 valence", 0.0, 1.0, 0.50, key=f"val_{st.session_state['reset_nonce']}")
-    release_year = st.slider("📅 release_year", 1950, 2025, 2020, key=f"year_{st.session_state['reset_nonce']}")
+    tempo = st.slider(
+        "🥁 tempo (BPM)", 40.0, 220.0, 120.0,
+        key=f"tempo_{st.session_state['reset_nonce']}",
+        help="Estimated tempo in beats per minute."
+    )
+
+    artist_popularity = st.slider(
+        "⭐ artist_popularity", 0, 100, 50,
+        key=f"apop_{st.session_state['reset_nonce']}",
+        help="Spotify popularity score for the artist (0–100)."
+    )
+
+    valence = st.slider(
+        "😊 valence", 0.0, 1.0, 0.50,
+        key=f"val_{st.session_state['reset_nonce']}",
+        help="Musical positivity (0–1). Higher values indicate happier tracks."
+    )
+
+    release_year = st.slider(
+        "📅 release_year", 1950, 2025, 2020,
+        key=f"year_{st.session_state['reset_nonce']}",
+        help="Release year of the track."
+    )
 
 with st.expander("🧪 Advanced (optional)", expanded=False):
-    speechiness = st.slider("🗣️ speechiness", 0.0, 1.0, 0.05, key=f"sp_{st.session_state['reset_nonce']}")
-    acousticness = st.slider("🎻 acousticness", 0.0, 1.0, 0.20, key=f"ac_{st.session_state['reset_nonce']}")
-    instrumentalness = st.slider("🎼 instrumentalness", 0.0, 1.0, 0.00, key=f"ins_{st.session_state['reset_nonce']}")
-    liveness = st.slider("🎤 liveness", 0.0, 1.0, 0.15, key=f"liv_{st.session_state['reset_nonce']}")
+    speechiness = st.slider(
+        "🗣️ speechiness", 0.0, 1.0, 0.05,
+        key=f"sp_{st.session_state['reset_nonce']}",
+        help="Presence of spoken words in the track."
+    )
+    acousticness = st.slider(
+        "🎻 acousticness", 0.0, 1.0, 0.20,
+        key=f"ac_{st.session_state['reset_nonce']}",
+        help="Confidence measure of whether the track is acoustic."
+    )
+    instrumentalness = st.slider(
+        "🎼 instrumentalness", 0.0, 1.0, 0.00,
+        key=f"ins_{st.session_state['reset_nonce']}",
+        help="Likelihood that the track contains no vocals."
+    )
+    liveness = st.slider(
+        "🎤 liveness", 0.0, 1.0, 0.15,
+        key=f"liv_{st.session_state['reset_nonce']}",
+        help="Detects the presence of an audience."
+    )
 
 row = {
     "duration_ms": float(duration_sec) * 1000.0,
