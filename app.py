@@ -24,6 +24,7 @@ st.markdown(
       .stExpander {border-radius: 14px;}
       [data-baseweb="slider"] {padding-top: 0.35rem;}
       .small-muted {color: rgba(255,255,255,0.65); font-size: 0.9rem;}
+      .metric-hint {color: rgba(255,255,255,0.75); font-size: 0.95rem; margin-top: -0.25rem;}
     </style>
     """,
     unsafe_allow_html=True
@@ -65,20 +66,20 @@ with h1:
         st.write("🎵")
 with h2:
     st.title("Spotify Hit Predictor")
-    st.caption("Adjust the inputs and press Predict. Use the ? icons next to each variable for a short explanation.")
+    st.caption("Choose a genre, set the audio/artist features, then click Predict. Use the ? icons for short, practical explanations.")
 
 with st.sidebar:
     keep_alive = st.checkbox(
         "Keep alive (auto-refresh every 5 min)",
         value=True,
         key=f"keepalive_{st.session_state['reset_nonce']}",
-        help="Keeps the session active while the page is open. For Streamlit Cloud, external pings are still recommended."
+        help="Helps keep your session active while this page is open. For Streamlit Cloud, an external ping (e.g., UptimeRobot) is recommended to reduce sleeping."
     )
     st.markdown(
         """
         <div class="small-muted">
-        Streamlit Cloud apps may sleep when inactive.
-        Use an external HTTP monitor (e.g., UptimeRobot) to ping every 5 minutes.
+        Streamlit Cloud apps may sleep when inactive.  
+        Recommended: set up an external HTTP monitor (e.g., UptimeRobot) to ping your app URL every 5 minutes.
         </div>
         """,
         unsafe_allow_html=True
@@ -129,7 +130,7 @@ with g1:
         genre_groups,
         index=genre_groups.index(default_group),
         key=f"genre_group_{st.session_state['reset_nonce']}",
-        help="A broad genre category used only to filter the list of sub-genres."
+        help="Pick a broad category to make the next list shorter (this does NOT go into the model directly)."
     )
 
 with g2:
@@ -139,7 +140,7 @@ with g2:
         sub_list if sub_list else genres,
         index=0,
         key=f"alt_genre_{st.session_state['reset_nonce']}",
-        help="Specific genre label used by the model. This determines track_genre_freq."
+        help="This is the genre label used by the model. The app converts it into track_genre_freq (how common the genre is in the training data)."
     )
 
 track_genre_freq = float(GENRE_FREQ_MAP.get(chosen_genre, 0.0))
@@ -151,78 +152,80 @@ with c1:
     duration_sec = st.slider(
         "⏱️ duration (sec)", 30, 900, 180,
         key=f"duration_{st.session_state['reset_nonce']}",
-        help="Track length in seconds."
+        help="Track length in seconds. Most songs are ~120–240 seconds (2–4 minutes)."
     )
+    st.markdown(f"<div class='metric-hint'>≈ {duration_sec//60} min {duration_sec%60:02d} sec</div>", unsafe_allow_html=True)
 
     artist_followers_k = st.slider(
         "👥 artist_followers (K)", 0, 150_000, 100, step=100,
         key=f"followers_{st.session_state['reset_nonce']}",
-        help="Approximate artist follower count in thousands (K)."
+        help="Artist followers in thousands (K). Example: 250K means 250,000 followers."
     )
+    st.markdown(f"<div class='metric-hint'>≈ {artist_followers_k*1000:,} followers</div>", unsafe_allow_html=True)
 
     danceability = st.slider(
         "💃 danceability", 0.0, 1.0, 0.50,
         key=f"dance_{st.session_state['reset_nonce']}",
-        help="How suitable the track is for dancing (0–1)."
+        help="How dance-friendly the track is (0–1). Higher values usually mean a steadier beat and easier rhythm for dancing."
     )
 
     energy = st.slider(
         "🔋 energy", 0.0, 1.0, 0.50,
         key=f"energy_{st.session_state['reset_nonce']}",
-        help="Perceived intensity and activity of the track (0–1)."
+        help="Perceived intensity and activity (0–1). Higher values often feel louder, faster, and more energetic."
     )
 
     loudness = st.slider(
         "🔊 loudness (dB)", -20.0, 0.0, -8.0,
         key=f"loud_{st.session_state['reset_nonce']}",
-        help="Average loudness in dB. Typical Spotify tracks are between -14 and -5 dB."
+        help="Average loudness in dB. Typical Spotify tracks are around -14 to -5 dB. Closer to 0 means louder mastering."
     )
 
 with c2:
     tempo = st.slider(
         "🥁 tempo (BPM)", 40.0, 220.0, 120.0,
         key=f"tempo_{st.session_state['reset_nonce']}",
-        help="Estimated tempo in beats per minute."
+        help="Estimated tempo in beats per minute (BPM). Pop is often ~90–140 BPM."
     )
 
     artist_popularity = st.slider(
         "⭐ artist_popularity", 0, 100, 50,
         key=f"apop_{st.session_state['reset_nonce']}",
-        help="Spotify popularity score for the artist (0–100)."
+        help="Spotify popularity score (0–100). Higher usually means the artist is more widely listened to right now."
     )
 
     valence = st.slider(
         "😊 valence", 0.0, 1.0, 0.50,
         key=f"val_{st.session_state['reset_nonce']}",
-        help="Musical positivity (0–1). Higher values indicate happier tracks."
+        help="Musical positivity (0–1). Higher = happier/cheerful; lower = sad/angry."
     )
 
     release_year = st.slider(
         "📅 release_year", 1950, 2025, 2020,
         key=f"year_{st.session_state['reset_nonce']}",
-        help="Release year of the track."
+        help="Release year of the track. Some years/eras may correlate with hit likelihood depending on the dataset."
     )
 
 with st.expander("🧪 Advanced (optional)", expanded=False):
     speechiness = st.slider(
         "🗣️ speechiness", 0.0, 1.0, 0.05,
         key=f"sp_{st.session_state['reset_nonce']}",
-        help="Presence of spoken words in the track."
+        help="Amount of spoken words (0–1). Higher values often appear in rap or spoken-word tracks."
     )
     acousticness = st.slider(
         "🎻 acousticness", 0.0, 1.0, 0.20,
         key=f"ac_{st.session_state['reset_nonce']}",
-        help="Confidence measure of whether the track is acoustic."
+        help="Probability the track is acoustic (0–1). Higher values usually mean more unplugged / acoustic sound."
     )
     instrumentalness = st.slider(
         "🎼 instrumentalness", 0.0, 1.0, 0.00,
         key=f"ins_{st.session_state['reset_nonce']}",
-        help="Likelihood that the track contains no vocals."
+        help="Likelihood of no vocals (0–1). Near 0 means vocals present; higher means more instrumental."
     )
     liveness = st.slider(
         "🎤 liveness", 0.0, 1.0, 0.15,
         key=f"liv_{st.session_state['reset_nonce']}",
-        help="Detects the presence of an audience."
+        help="Detects audience / live performance feeling (0–1). Higher values are more likely recorded live."
     )
 
 row = {
